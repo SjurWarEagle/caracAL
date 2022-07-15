@@ -4,10 +4,36 @@
   "description": "caracAL - Node client for adventure.land",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dtsmake:help": "dtsmake --help",
+    "generate:definitions": "dtsmake -s game_files/718/runner_functions.js -g wrap -i",
+    "parcel:help": "parcel build --help",
+    "build:all:dev": "parcel build --no-source-maps --no-content-hash --bundle-node-modules --no-minify src/ai/roles/warrior.ts src/ai/roles/priest.ts src/ai/roles/mage.ts src/ai/roles/merchant.ts --target node -d CODE/caracAL/chars",
+    "rm:localstorage": "rimraf localStorage/storage.json",
+    "start": "node main.js",
+    "start2": "run-s build:all:dev rm:localstorage start"
   },
   "author": "number_e",
   "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "7.18.6",
+    "@babel/core": "7.18.6",
+    "@babel/plugin-proposal-class-properties": "7.3.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
+    "@babel/plugin-proposal-optional-chaining": "7.2.0",
+    "@babel/preset-env": "7.3.1",
+    "@babel/preset-typescript": "7.1.0",
+    "@types/node": "10.12.21",
+    "@parcel/validator-typescript": "2.6.2",
+    "@parcel/reporter-bundle-analyzer": "2.6.2",
+    "prettier": "1.16.4",
+    "tslint": "5.12.1",
+    "cp-cli": "2.0.0",
+    "typescript": "3.3.1",
+    "ts-node": "10.8.2",
+    "rimraf": "3.0.2",
+    "npm-run-all": "4.1.5",
+    "parcel-bundler": "1.12.5"
+  },
   "dependencies": {
     "bot-web-interface": "^2.0.9",
     "inquirer": "^8.0.0",
