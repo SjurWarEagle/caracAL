@@ -1,7 +1,6 @@
 import config, {getValue, partyLeader, partyMerchant, setValue} from "../config";
-import {Entity, ICharacter} from "../../definitions/game";
+import {Entity} from "../../definitions/game";
 import {BroadCastHandler} from "./broadcasts";
-import filterConsole from "filter-console";
 
 export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
@@ -126,7 +125,7 @@ export function startRevive() {
     }, 500);
 }
 
-export function walkToGroupLead(broadcast: BroadCastHandler) {
+export async function walkToGroupLead(broadcast: BroadCastHandler) {
     if (character.rip) {
         setTimeout(respawn, 15000);
         return;
@@ -138,6 +137,7 @@ export function walkToGroupLead(broadcast: BroadCastHandler) {
         //I'm leader, no need to follow myself
         return;
     }
+    set_message('to leader')
     let lastDistanceCheckToLeader = +getValue("lastDistanceCheckToLeader-" + character.name);
     if (Date.now() - lastDistanceCheckToLeader < 10_000) {
         // reduce the number of checks, the distance will not change every ms.
@@ -148,6 +148,15 @@ export function walkToGroupLead(broadcast: BroadCastHandler) {
     // if (character.name === partyMerchant) {
     //   log("walkToGroupLead " + lastDistanceCheckToLeader);
     // }
+
+
+    if (character.bank) {
+        if (!smart.moving) {
+            await smart_move("main")
+            return;
+        }
+    }
+
     let mainChar = getCharacter(partyLeader);
     if (!mainChar) {
         // log("Leader '" + partyLeader + "' not in sight, checking last broadcast.");
@@ -299,3 +308,12 @@ export function getCharacterPosition(name: string): { x: number, y: number } | u
         return undefined;
     }
 }
+
+export function getInventorySlotOfItem(itemName: string) {
+    for (let i = 0; i < character.items.length; i++) {
+        if (character.items[i] && character.items[i]!.name === itemName) {
+            return i;
+        }
+    }
+}
+

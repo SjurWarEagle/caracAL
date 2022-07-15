@@ -1,6 +1,6 @@
-import { Entity, ICharacter } from "../../definitions/game";
-import config, { getValue, mainCityPotionVendor, partyMerchant, setCurrentActivityMerchant, setValue } from "../config";
-import { getCharacter } from "./common";
+import { ICharacter } from "../../definitions/game";
+import config, { getValue, mainCityPotionVendor, setValue } from "../config";
+import {Merchant} from "../roles/merchant";
 
 type ShoppingItemName = "hp" | "mp";
 
@@ -96,52 +96,6 @@ function getRequestedForChar(itemName: string, requester: string): number {
   }
 }
 
-function transferItems(itemName: string, itemTechName: string, player: string, merchant: Entity, target: Entity) {
-  let requested = getRequestedForChar(itemName, player);
-
-  let slot = -1;
-  let candidate = character.items.find((item, index) => {
-    // noinspection PointlessBooleanExpressionJS
-    const rc = !!(item && (item.name === itemTechName));
-    if (rc) {
-      slot = index;
-    }
-    return rc;
-  });
-  let available = 0;
-  if (candidate) {
-    available = candidate.q || 0;
-  }
-
-  let amountToTransfer = Math.min(available, requested);
-  if (amountToTransfer > 0 && (available > 0 && simple_distance(merchant, target) < 200)) {
-    log("Sending " + itemName.toUpperCase() + " to player " + target.name + " " + amountToTransfer + "/" + requested);
-    send_item(target, slot, amountToTransfer);
-  }
-}
-
-export function startTransferRequestedItemsToTeam() {
-  setInterval(() => {
-
-    const merchant = getCharacter(partyMerchant);
-    if (!merchant) {
-      return;
-    }
-
-    config.myHelpers.forEach((player) => {
-      if (player === partyMerchant) {
-        return;
-      }
-      const target = getCharacter(player);
-      if (!target) {
-        return;
-      }
-      transferItems("mp", "mpot0", player, merchant, target);
-      transferItems("hp", "hpot0", player, merchant, target);
-    });
-  }, 10_000);
-}
-
 export function getInventoryStock(itemName: string): number {
   let candidate = character.items.find((item) => {
     // noinspection PointlessBooleanExpressionJS
@@ -156,7 +110,7 @@ export function getInventoryStock(itemName: string): number {
 
 }
 
-export function travelToCity() {
+export function travelToCity(p: Merchant) {
   const availableHP = getInventoryStock("hpot0");
   const requestedHP = getTotalRequested("hpot0");
   let missingHP = Math.min(200, (requestedHP - availableHP));
@@ -169,10 +123,11 @@ export function travelToCity() {
 
   if (amountToBuyHP <= 0 && amountToBuyMP <= 0) {
     console.log("💰 Nothing needed to buy, returning to loot collection.");
-    setCurrentActivityMerchant("COMBAT");
+    p.currentActivity="COMBAT";
     return;
   }
 
+  set_message('trvl city')
   if (character.c.town) {
     //already teleporting
     return;

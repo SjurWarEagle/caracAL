@@ -9,7 +9,8 @@ let monsterHunterLocations = {
     y: daisy.position[1] + 20
 };
 
-let whiteListHuntingTargets = ["goo", "bee", "crocodile", "crab", "chicken", "snake", "tortoise"];
+let whiteListHuntingTargets = ["goo"];
+// let whiteListHuntingTargets = ["goo", "bee", "crocodile", "crab", "chicken", "snake", "tortoise"];
 const rememberedHunts: { [char: string]: any } = {};
 
 export class HuntingHandler {

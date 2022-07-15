@@ -3,6 +3,7 @@ import {getCharacter} from "./common";
 
 export class BroadCastHandler {
 
+    public static readonly BROADCAST_ORDER_ITEM = 'BROADCAST_ORDER_ITEM';
     public static readonly BROADCAST_ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
     public static readonly BROADCAST_ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
     public static readonly BROADCAST_LEADER_POSITION = 'LEADER_POSITION';
@@ -31,11 +32,11 @@ export class BroadCastHandler {
     }
 
     public broadcastToTeam(type: string, data: any): void {
-            data.type = type;
-            let msg = JSON.stringify(data)
-            config.myHelpers.forEach((name) => {
-                send_cm(name, msg);
-            });
+        data.type = type;
+        let msg = JSON.stringify(data)
+        config.myHelpers.forEach((name) => {
+            send_cm(name, msg);
+        });
     }
 
     public broadcastHunts(sender: string): void {
@@ -54,4 +55,25 @@ export class BroadCastHandler {
         }, 30_000);
     }
 
+    async orderItems(partyMerchant: string, cnt: number, itemName: string, requesterName: string) {
+        if (cnt <= 0) {
+            return;
+        }
+        let data: SupplyOrder = {
+            msgType: BroadCastHandler.BROADCAST_ORDER_ITEM,
+            itemName: itemName,
+            requesterName: requesterName,
+            cnt: cnt,
+        };
+        // console.log(data);
+        send_cm(partyMerchant,JSON.stringify(data));
+    }
+}
+
+
+export interface SupplyOrder {
+    msgType: string;
+    itemName: string;
+    requesterName: string;
+    cnt: number;
 }

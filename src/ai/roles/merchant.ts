@@ -3,27 +3,27 @@ import {
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
-import {startRequestingCommonStuff, startTransferRequestedItemsToTeam, travelToCity} from "../tasks/shopping";
+import {startRequestingCommonStuff, travelToCity} from "../tasks/shopping";
 import {getValue} from "../config";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
-import {startRestockMonitoring} from "../tasks/restock";
+import {StockMonitor} from "../tasks/restock";
 import {startReportingGrafana} from "../tasks/statistic";
 
-// let currentActivity: PlayerActivity = "COMBAT";
 let lastCheckActivity = 0;
 
 export class Merchant {
-    protected currentActivity: PlayerActivity = "COMBAT";
+    public currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
+    protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
     constructor() {
-
     }
 
-    start() {
+    async start() {
 
+        await this.stockMonitor.startCollectingRequests();
         this.broadcastHandler.listenForLastLeaderPosition();
         this.huntingHandler.receiveBroadCastHunts();
         setInterval(() => {
@@ -36,9 +36,9 @@ export class Merchant {
         startBuffing();
         startAcceptingInvites();
         startRequestingCommonStuff(character);
-        startTransferRequestedItemsToTeam();
+        await this.stockMonitor.startDistributeOrders();
 
-        startRestockMonitoring();
+        this.stockMonitor.startRestockMonitoring();
         setInterval(() => {
             const newActivity = getValue("currentActivityMerchant") || this.currentActivity;
             if (newActivity !== this.currentActivity) {
@@ -52,10 +52,16 @@ export class Merchant {
             if (character.gold < 1_000_000) {
                 return false;
             }
+            if (character.gold < 1_000_000 && character.bank) {
+                set_message('leave bank')
+                await smart_move("main")
+                return false;
+            }
             if (character.bank) {
                 await bank_deposit(500_000);
                 return true;
             } else {
+                set_message('to bank')
                 await smart_move("bank", async () => {
                     await bank_deposit(500_000);
                 });
@@ -80,17 +86,17 @@ export class Merchant {
                 lastCheckActivity = Date.now();
                 if (this.currentActivity === "SHOPPING") {
                     log(this.currentActivity + " === \"SHOPPING\" going to city");
-                    travelToCity();
+                    travelToCity(this);
                     return;
                 } else if (this.currentActivity !== "COMBAT") {
                     log(this.currentActivity + " !== \"COMBAT\" doing nothing");
                     return;
                 }
                 if (await needDepositToBank()) {
-                    set_message("bank ops")
+                    await set_message("bank ops")
                     return;
                 }
-                walkToGroupLead(this.broadcastHandler);
+                await walkToGroupLead(this.broadcastHandler);
             }
         }, 200);
 
