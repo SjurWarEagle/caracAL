@@ -45,7 +45,7 @@ export class StockMonitor {
                     }
                 })
             });
-            console.log(this.openRequests);
+            // console.log(this.openRequests);
         }, 10_000);
     }
 

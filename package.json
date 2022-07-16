@@ -7,9 +7,11 @@
     "dtsmake:help": "dtsmake --help",
     "generate:definitions": "dtsmake -s game_files/718/runner_functions.js -g wrap -i",
     "parcel:help": "parcel build --help",
-    "build:all:dev": "parcel build --no-source-maps --no-content-hash --bundle-node-modules --no-minify src/ai/roles/warrior.ts src/ai/roles/priest.ts src/ai/roles/mage.ts src/ai/roles/merchant.ts --target node -d CODE/caracAL/chars",
+    "build:all:dev": "parcel build --no-source-maps --no-content-hash --bundle-node-modules --no-minify src/ai/roles/warrior.ts src/ai/roles/priest.ts src/ai/roles/mage.ts src/ai/roles/merchant.ts  src/ai/roles/ranger.ts --target node -d CODE/caracAL/chars",
     "rm:localstorage": "rimraf localStorage/storage.json",
     "start": "node main.js",
+    "upload": "ts-node src/upload/upload.ts",
+    "build:upload": "run-s build:all:dev upload ",
     "start2": "run-s build:all:dev rm:localstorage start"
   },
   "author": "number_e",

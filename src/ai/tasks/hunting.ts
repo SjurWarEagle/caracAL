@@ -141,7 +141,7 @@ export class HuntingHandler {
         return false;
     }
 
-    public  reportHunts() {
+    public reportHunts() {
         let report = "\n";
         report
             += "+ " + "-".padEnd(10, "-")

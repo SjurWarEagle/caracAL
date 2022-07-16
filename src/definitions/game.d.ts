@@ -207,7 +207,7 @@ declare global {
 
     function request_party_invite(to: string): void;
 
-    function set_message(msg: string): void;
+    function set_message(msg: string,colour?: string): void;
 
     function send_gold(target: Entity, number: number): void;
 

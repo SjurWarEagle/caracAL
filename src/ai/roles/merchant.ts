@@ -9,6 +9,7 @@ import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
 import {startReportingGrafana} from "../tasks/statistic";
+import {Tools} from "../../tools";
 
 let lastCheckActivity = 0;
 
@@ -28,7 +29,11 @@ export class Merchant {
         this.huntingHandler.receiveBroadCastHunts();
         setInterval(() => {
             this.huntingHandler.reportHunts();
-        }, 10_000);
+        }, 60_000);
+
+        setInterval(() => {
+            Tools.sortInventory();
+        }, 60_000);
 
         startReportingGrafana();
         startRevive();
@@ -114,3 +119,11 @@ function on_party_invite(name: string) {
 
 
 new Merchant().start();
+
+
+map_key("2", "snippet", "sortInventory()");
+// noinspection JSUnusedLocalSymbols
+function sortInventory() {
+    Tools.sortInventory();
+}
+

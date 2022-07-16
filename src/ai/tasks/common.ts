@@ -171,7 +171,7 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
     } else {
         let dist = simple_distance(mainChar, getCharacter(character.name));
         if (dist > 150) {
-            smart_move({x: mainChar.real_x || 0 + 5, y: mainChar.real_y || 0 + 5});
+            smart_move({x: mainChar.real_x || 5, y: mainChar.real_y || 5});
         }
     }
 
@@ -185,19 +185,17 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 export function determineMonsterTypeMatchingLevel(): string {
     let rc;
 //  if (character.level < 30) {
-    rc = "goo";
-    /*
-      } else if (character.level < 35) {
+//     rc = "goo";
+//       } else if (character.level < 35) {
         rc = "crab";
-      } else if (character.level < 40) {
-        rc = "bee";
-      } else if (character.level < 50) {
-        rc = "tortoise";
-      } else if (character.level < 70) {
-        rc = "pppompom";
-      } else {
-        rc = "spider";
-    */
+      // } else if (character.level < 40) {
+      //   rc = "bee";
+      // } else if (character.level < 50) {
+      //   rc = "tortoise";
+      // } else if (character.level < 70) {
+      //   rc = "pppompom";
+      // } else {
+      //   rc = "spider";
     //}
 
     return rc;

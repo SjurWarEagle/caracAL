@@ -21,5 +21,5 @@ export function getValue(key: string): any {
 export let partyLeader: string = "Sjur";
 export let partyMerchant: string = "Schnapper";
 
-let myHelpers: string[] = ["Sjur", "WarEagle", "Elvira", "Schnapper"];
+let myHelpers: string[] = ["Sjur", "Kosh", "Elvira", "Schnapper"];
 export default { myHelpers};
