@@ -1,5 +1,5 @@
 import {
-    PlayerActivity, startAcceptingInvites, startBuffing, startRevive, startSelfHeal,
+    PlayerActivity, startAcceptingInvites, startBuffing, startRevive,
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
@@ -38,7 +38,6 @@ export class Merchant {
 
         startReportingGrafana();
         startRevive();
-        startSelfHeal();
         startBuffing();
         startAcceptingInvites();
         this.shoppingHandler.startRequestingCommonStuff(character);

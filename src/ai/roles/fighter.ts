@@ -4,7 +4,6 @@ import {
     PlayerActivity,
     startAcceptingInvites,
     startRevive,
-    startSelfHeal,
     startTransferLootToMerchant,
     usePotionIfNeeded,
     walkToGroupLead
@@ -36,7 +35,6 @@ export class Fighter {
 
         startReportingGrafana();
         startRevive();
-        startSelfHeal();
         startTransferLootToMerchant();
         startAcceptingInvites();
         this.shoppingHandler.startRequestingCommonStuff(character);

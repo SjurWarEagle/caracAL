@@ -1,22 +1,31 @@
 export class Tools {
+    private static convertToSortingName(itemName: string) {
+        if (!itemName) {
+            return itemName;
+        }
+
+        switch (itemName.toLowerCase()) {
+            case "hpot0":
+                return "aaaaaaaaaa1";
+            case "mpot0":
+                return "aaaaaaaaaa2";
+            case "cscroll0":
+                return "bbbbbbbbbb1";
+            case "scroll0":
+                return "bbbbbbbbbb2";
+            default:
+                return itemName;
+        }
+    }
+
     public static sortInventory(): void {
         set_message('sorting', '#FF0000');
 
         let marker = setInterval(() => {
-            function compare(a: string, b: string) {
+            let compare = (a: string, b: string) => {
                 //replace special items to be sorted at the very start
-                if (a === "hpot0") {
-                    a = "aaaaaaaaaa1";
-                }
-                if (a === "mpot0") {
-                    a = "aaaaaaaaaa2";
-                }
-                if (b === "hpot0") {
-                    b = "aaaaaaaaaa1";
-                }
-                if (b === "mpot0") {
-                    b = "aaaaaaaaaa2";
-                }
+                a = this.convertToSortingName(a);
+                b = this.convertToSortingName(b);
                 return a.localeCompare(b);
             }
 

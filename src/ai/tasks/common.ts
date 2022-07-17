@@ -1,4 +1,4 @@
-import config, {getValue, partyLeader, partyMerchant, setValue} from "../config";
+import config, {getValue, partyLeader, partyMerchant, setValue, Stocks} from "../config";
 import {Entity} from "../../definitions/game";
 import {BroadCastHandler} from "./broadcasts";
 
@@ -60,9 +60,16 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
             }
             let itemName = item.name;
             // console.log(i,itemName,item.q)
-            if (itemName === "mpot0" || itemName === "hpot0") {
+            if (itemName === "mpot0") {
                 let amount = item.q || 0;
-                amount = Math.max(0, amount - 2100);
+                amount = Math.max(0, amount - Stocks.minCntMP);
+                if (amount > 0) {
+                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
+                    send_item(merchant, i, amount);
+                }
+            } else if (itemName === "hpot0") {
+                let amount = item.q || 0;
+                amount = Math.max(0, amount - Stocks.minCntHP);
                 if (amount > 0) {
                     log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
@@ -98,22 +105,6 @@ function buff(name: string) {
         log("Buffing " + target.name);
         use_skill("mluck", target);
     }
-}
-
-export function startSelfHeal() {
-    setInterval(function () {
-        if (character.rip) {
-            setTimeout(respawn, 15000);
-            return;
-        }
-
-        if (character.hp / character.max_hp <= .90) {
-            use_skill("regen_hp");
-        } else if (character.mp / character.max_mp <= .90) {
-            use_skill("regen_mp");
-        }
-
-    }, 4500);//4 sec would be enough, just a bit buffer
 }
 
 export function startRevive() {
@@ -184,35 +175,38 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 
 export function determineMonsterTypeMatchingLevel(): string {
     let rc;
-//  if (character.level < 30) {
-//     rc = "goo";
-//       } else if (character.level < 35) {
+    if (character.level < 30) {
+        rc = "goo";
+    } else if (character.level < 35) {
         rc = "crab";
-      // } else if (character.level < 40) {
-      //   rc = "bee";
-      // } else if (character.level < 50) {
-      //   rc = "tortoise";
-      // } else if (character.level < 70) {
-      //   rc = "pppompom";
-      // } else {
-      //   rc = "spider";
-    //}
+    } else if (character.level < 40) {
+        rc = "bee";
+    } else if (character.level < 50) {
+        rc = "tortoise";
+    } else if (character.level < 70) {
+        rc = "pppompom";
+    } else {
+        rc = "spider";
+    }
+
+    //manual overrride
+    rc = "spider";
 
     return rc;
 
 }
 
 export function usePotionIfNeeded(): void {
-    if (can_use("hp")) {
-        if (character.hp / character.max_hp <= .50
-            || character.max_hp - character.hp >= 200) {
-            use("hp");
-        }
-        if (character.mp / character.max_mp <= .50
-            || character.max_mp - character.mp >= 300) {
-            use("mp");
-        }
+    if (character.hp / character.max_hp <= .6 && can_use("hp")) {
+        use("hp");
+    } else if (character.mp / character.max_mp <= .6 && can_use("mp")) {
+        use("mp");
+    } else if (character.hp / character.max_hp <= .95) {
+        use_skill("regen_hp");
+    } else if (character.mp / character.max_mp <= .95) {
+        use_skill("regen_mp");
     }
+
 }
 
 export async function attackClosestMonster(mon_type: string): Promise<void> {

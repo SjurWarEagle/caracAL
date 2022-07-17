@@ -1,4 +1,4 @@
-import {partyMerchant} from "../config";
+import {partyMerchant, Stocks} from "../config";
 import {BroadCastHandler, SupplyOrder} from "./broadcasts";
 import {getCharacter, getInventorySlotOfItem} from "./common";
 
@@ -18,7 +18,7 @@ export class StockMonitor {
             }
 
             this.openRequests.forEach((value, requesterName) => {
-                console.log('trying to distribute', requesterName, value);
+                // console.log('trying to distribute', requesterName, value);
                 let requester = get_player(requesterName);
                 if (!requester) {
                     // not close by
@@ -68,12 +68,12 @@ export class StockMonitor {
         setInterval(async () => {
 
             let currentCntHP = this.getStock('hpot0')
-            if (currentCntHP < 2_000) {
-                await this.broadCastHandler.orderItems(partyMerchant, 2000 - currentCntHP, 'hpot0', character.name);
+            if (currentCntHP < Stocks.minCntHP) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP - currentCntHP, 'hpot0', character.name);
             }
             let currentCntMP = this.getStock('mpot0')
-            if (currentCntMP < 2_000) {
-                await this.broadCastHandler.orderItems(partyMerchant, 2000 - currentCntMP, 'mpot0', character.name);
+            if (currentCntMP < Stocks.minCntMP) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP - currentCntMP, 'mpot0', character.name);
             }
         }, 10_000)
     }

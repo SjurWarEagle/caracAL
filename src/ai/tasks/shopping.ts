@@ -1,5 +1,5 @@
 import {ICharacter} from "../../definitions/game";
-import config, {getValue, setValue} from "../config";
+import config, {getValue, setValue, Stocks} from "../config";
 import {Merchant} from "../roles/merchant";
 
 type ShoppingItemName = "hp" | "mp";
@@ -15,21 +15,21 @@ class ShoppingList {
 
 export class ShoppingHandler {
 
-    public travelToCity(p: Merchant) {
+    public async travelToCity(p: Merchant) {
         const availableHP = this.getInventoryStock("hpot0");
         const requestedHP = this.getTotalRequested("hpot0");
-        let missingHP = Math.min(200, (requestedHP - availableHP));
+        let missingHP = Math.min(Stocks.minReservceMerchantHP, (requestedHP - availableHP));
         const availableMP = this.getInventoryStock("mpot0");
         const requestedMP = this.getTotalRequested("mpot0");
-        let missingMP = Math.min(200, (requestedMP - availableMP));
+        let missingMP = Math.min(Stocks.minReservceMerchantMP, (requestedMP - availableMP));
 
         const availableUpgrade = this.getInventoryStock("scroll0");
         const availableCombound = this.getInventoryStock("cscroll0");
 
         let amountToBuyUpgrade = Math.max(20 - availableUpgrade, 0);
         let amountToBuyCombound = Math.max(20 - availableCombound, 0);
-        let amountToBuyHP = Math.max(missingHP, 1000 * 1.5 - availableHP, 0);
-        let amountToBuyMP = Math.max(missingMP, 1000 * 1.5 - availableMP, 0);
+        let amountToBuyHP = Math.max(missingHP, Stocks.minReservceMerchantHP * 1.2 - availableHP, 0);
+        let amountToBuyMP = Math.max(missingMP, Stocks.minReservceMerchantMP * 1.2 - availableMP, 0);
 
         if (amountToBuyHP <= 0 && amountToBuyMP <= 0 && amountToBuyUpgrade <= 0 && amountToBuyCombound <= 0) {
             console.log("💰 Nothing needed to buy, returning to loot collection.");
@@ -54,7 +54,7 @@ export class ShoppingHandler {
         }
 
         set_message('trvl city')
-        smart_move({x:-180,y:-110}, () => {
+        await smart_move({x: -180, y: -110}, () => {
             // console.log("💰 I have reached the city");
 
             console.log("💰 trying to buy " + amountToBuyMP + " MP and " + amountToBuyHP + " HP");
@@ -181,6 +181,7 @@ export class ShoppingHandler {
         return availableInInventory;
 
     }
+
     public startRestockMonitoring() {
         setInterval(() => {
             let stockMP = this.getStock("mpot0");
