@@ -14,11 +14,13 @@ import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
 import {ShoppingHandler} from "../tasks/shopping";
+import {EquipmentHandler} from "../tasks/equipment";
 
 
 export class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
@@ -30,6 +32,7 @@ export class Fighter {
         this.huntingHandler.startBroadCastHunts();
 
         this.stockMonitor.startWatchingInventoryStock();
+        this.equipmentHandler.startBeNotNaked();
 
         startReportingGrafana();
         startRevive();

@@ -5,6 +5,7 @@ interface ISpellCasting {
 }
 
 export interface ICharacter extends Entity {
+    slots: { [T in keyof string]: ItemInfo };
     bank?: boolean;
     c: ISpellCasting;
     ping?: number;
@@ -58,6 +59,7 @@ export interface ItemInfo {
     level?: number;
     q?: number;
     name: string;
+    type?: string;
     g?: number;
 }
 
@@ -170,7 +172,7 @@ declare global {
     function swap(a: number, b: number): void;
 
     function can_attack(entity: Entity): boolean;
-
+    function equip(inventorySlot:number,slot:string):void
     function buy_with_gold(item: ItemName, q: number): void;
 
     function use(skill: SkillName, target?: Entity): void;

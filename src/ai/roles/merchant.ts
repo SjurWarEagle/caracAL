@@ -10,17 +10,20 @@ import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
 import {startReportingGrafana} from "../tasks/statistic";
 import {Tools} from "../../tools";
+import {EquipmentHandler} from "../tasks/equipment";
 
 let lastCheckActivity = 0;
 
 export class Merchant {
     public currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
     async start() {
+        await this.equipmentHandler.startBeNotNaked();
 
         await this.stockMonitor.startCollectingRequests();
         this.broadcastHandler.listenForLastLeaderPosition();
