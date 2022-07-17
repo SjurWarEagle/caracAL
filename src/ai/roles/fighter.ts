@@ -9,16 +9,17 @@ import {
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
-import {startRequestingCommonStuff} from "../tasks/shopping";
 import {startReportingGrafana} from "../tasks/statistic";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
+import {ShoppingHandler} from "../tasks/shopping";
 
 
 export class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
@@ -35,7 +36,7 @@ export class Fighter {
         startSelfHeal();
         startTransferLootToMerchant();
         startAcceptingInvites();
-        startRequestingCommonStuff(character);
+        this.shoppingHandler.startRequestingCommonStuff(character);
 
         setInterval(async () => {
             if (character.rip) {

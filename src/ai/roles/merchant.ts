@@ -3,7 +3,7 @@ import {
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
-import {startRequestingCommonStuff, travelToCity} from "../tasks/shopping";
+import {ShoppingHandler} from "../tasks/shopping";
 import {getValue} from "../config";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
@@ -16,11 +16,9 @@ let lastCheckActivity = 0;
 export class Merchant {
     public currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
-
-    constructor() {
-    }
 
     async start() {
 
@@ -40,10 +38,10 @@ export class Merchant {
         startSelfHeal();
         startBuffing();
         startAcceptingInvites();
-        startRequestingCommonStuff(character);
+        this.shoppingHandler.startRequestingCommonStuff(character);
         await this.stockMonitor.startDistributeOrders();
 
-        this.stockMonitor.startRestockMonitoring();
+        this.shoppingHandler.startRestockMonitoring();
         setInterval(() => {
             const newActivity = getValue("currentActivityMerchant") || this.currentActivity;
             if (newActivity !== this.currentActivity) {
@@ -91,7 +89,7 @@ export class Merchant {
                 lastCheckActivity = Date.now();
                 if (this.currentActivity === "SHOPPING") {
                     log(this.currentActivity + " === \"SHOPPING\" going to city");
-                    travelToCity(this);
+                    this.shoppingHandler.travelToCity(this);
                     return;
                 } else if (this.currentActivity !== "COMBAT") {
                     log(this.currentActivity + " !== \"COMBAT\" doing nothing");
@@ -119,11 +117,3 @@ function on_party_invite(name: string) {
 
 
 new Merchant().start();
-
-
-map_key("2", "snippet", "sortInventory()");
-// noinspection JSUnusedLocalSymbols
-function sortInventory() {
-    Tools.sortInventory();
-}
-

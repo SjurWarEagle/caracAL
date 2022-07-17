@@ -1,9 +1,4 @@
 
-export const mainCityPotionVendor = { to: "potions", return: false };
-
-// export const mainCityPotionVendor = { x: -25, y: -130 };
-
-
 export function setValue(key: string, value: any): void {
   // tmpStorage.set(key, JSON.stringify(value));
   localStorage.setItem(key, JSON.stringify(value));

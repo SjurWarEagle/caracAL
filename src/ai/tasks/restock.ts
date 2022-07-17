@@ -1,4 +1,4 @@
-import {partyMerchant, setValue} from "../config";
+import {partyMerchant} from "../config";
 import {BroadCastHandler, SupplyOrder} from "./broadcasts";
 import {getCharacter, getInventorySlotOfItem} from "./common";
 
@@ -78,6 +78,7 @@ export class StockMonitor {
         }, 10_000)
     }
 
+    //FIXME duplicate with shopping.ts
     public getStock(itemName: string): number {
         let candidate = character.items.find((item) => {
             // noinspection PointlessBooleanExpressionJS
@@ -91,22 +92,6 @@ export class StockMonitor {
 
         return availableMP;
 
-    }
-
-    public startRestockMonitoring() {
-        setInterval(() => {
-            let stockMP = this.getStock("mpot0");
-            let stockHP = this.getStock("hpot0");
-            if (stockMP < 200) {
-                log("Need restocking (MP🧪)!");
-                setValue("currentActivityMerchant", "SHOPPING");
-            } else if (stockHP < 200) {
-                log("Need restocking (HP♥)!");
-                setValue("currentActivityMerchant", "SHOPPING");
-            } else {
-                setValue("currentActivityMerchant", "COMBAT");
-            }
-        }, 10_000);
     }
 
 }

@@ -1,11 +1,15 @@
-import {PlayerActivity} from "../tasks/common";
 import {Fighter} from "./fighter";
-import {BroadCastHandler} from "../tasks/broadcasts";
 
 export class Priest extends Fighter {
 
     constructor() {
         super();
+    }
+
+    public async startHealingTeam(): Promise<void> {
+        setInterval(() => {
+
+        }, 10_000);
     }
 }
 
@@ -22,4 +26,4 @@ function on_party_invite(name: string) {
 //startCommonFighterLoops(currentActivity);
 
 
-new Priest();
+new Priest().startHealingTeam();
