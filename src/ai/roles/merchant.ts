@@ -1,5 +1,8 @@
 import {
-    PlayerActivity, startAcceptingInvites, startBuffing, startRevive,
+    PlayerActivity,
+    startAcceptingInvites,
+    startBuffing,
+    startRevive,
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
@@ -83,8 +86,8 @@ export class Merchant {
                 return;
             }
 
-            if (await this.resourceGathering.isGatheringNeeded()){
-                if (character.mp<120 && !character.c.mining){
+            if (await this.resourceGathering.isGatheringNeeded()) {
+                if (character.mp < 120 && !character.c.mining) {
                     // regen mana, but do not abort mining!
                     usePotionIfNeeded();
                 }

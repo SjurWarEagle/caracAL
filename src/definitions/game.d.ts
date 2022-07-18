@@ -164,9 +164,12 @@ declare global {
     function respawn(): void;
 
     function log(msg: string): void;
+
     function is_on_cooldown(msg: string): boolean;
+
     function locate_item(msg: string): number;
-    function consume(inventorySlot:number): void;
+
+    function consume(inventorySlot: number): void;
 
     function start_character(name: string, script: string): void;
 
@@ -181,10 +184,13 @@ declare global {
     function swap(a: number, b: number): void;
 
     function can_attack(entity: Entity): boolean;
-    function equip(inventorySlot:number,slot?:string):void
+
+    function equip(inventorySlot: number, slot?: string): void
+
     function buy_with_gold(item: ItemName, q: number): void;
 
     function use(skill: SkillName, target?: Entity): void;
+
     function reduce_cooldown(skill: SkillName, time: number): void;
 
     function use_skill(skill: SkillName, target?: Entity): void;
@@ -219,7 +225,7 @@ declare global {
 
     function request_party_invite(to: string): void;
 
-    function set_message(msg: string,colour?: string): void;
+    function set_message(msg: string, colour?: string): void;
 
     function send_gold(target: Entity, number: number): void;
 
@@ -260,6 +266,7 @@ declare global {
     function stop(what: string): void;
 
     function clear_drawings(): void;
+
     function draw_circle(x: number, y: number, radius: number, size?: number, color?: number): Drawing;
 
     function draw_line(x: number, y: number, x2: number, y2: number, size?: number, color?: number): Drawing;

@@ -14,7 +14,7 @@ let whiteListHuntingTargets = ["goo"];
 const rememberedHunts: { [char: string]: any } = {};
 
 export class HuntingHandler {
-    constructor(private broadcasthandler:BroadCastHandler) {
+    constructor(private broadcasthandler: BroadCastHandler) {
     }
 
     public receiveBroadCastHunts() {
@@ -31,7 +31,7 @@ export class HuntingHandler {
         });
     }
 
-    public  startBroadCastHunts() {
+    public startBroadCastHunts() {
         this.broadcasthandler.broadcastHunts(character.name)
         setInterval(() => {
             let me = getCharacter(character.name);
@@ -79,7 +79,7 @@ export class HuntingHandler {
     /**
      * @return if quest can be turned in
      */
-    public  finishHuntingQuestIfDone(): boolean {
+    public finishHuntingQuestIfDone(): boolean {
         if (character.ctype == "merchant") {
             return false;
         }
@@ -106,7 +106,7 @@ export class HuntingHandler {
         return false;
     }
 
-    public  getNewHuntingQuest(): boolean {
+    public getNewHuntingQuest(): boolean {
         if (character.ctype == "merchant") {
             return false;
         }

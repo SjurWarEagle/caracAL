@@ -66,7 +66,7 @@ export class BroadCastHandler {
             cnt: cnt,
         };
         // console.log(data);
-        send_cm(partyMerchant,JSON.stringify(data));
+        send_cm(partyMerchant, JSON.stringify(data));
     }
 }
 

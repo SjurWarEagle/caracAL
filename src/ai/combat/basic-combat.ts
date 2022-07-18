@@ -8,7 +8,7 @@ export class BasicCombat implements ICombat {
     constructor() {
         this.targetInformation = {
             mon_type: determineMonsterTypeMatchingLevel(),
-            allAttackSameTarget:false,
+            allAttackSameTarget: false,
         }
     }
 

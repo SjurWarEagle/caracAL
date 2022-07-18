@@ -17,7 +17,7 @@ const MAIN_URL = 'http://127.0.0.1:5500/main.js';
 const script = document.createElement('script');
 //script.type = 'module';  // Uncomment for ES6 modules
 script.src = MAIN_URL;
-script.onerror = function(e) {
+script.onerror = function () {
     set_message('Load Error', 'red');
     log('Error loading remote script', 'red');
 };
