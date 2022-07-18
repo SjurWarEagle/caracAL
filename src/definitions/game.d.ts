@@ -81,6 +81,7 @@ export interface Entity {
     real_y?: number;
     going_x?: number;
     going_y?: number;
+range?: number;
     hp: number;
     cc: number;
     speed: number;
@@ -213,7 +214,7 @@ declare global {
 
     function accept_party_invite(from: string): void;
 
-    function get_nearest_monster(type?: { no_target?: boolean, type?: string, min_xp?: number, max_att?: number },
+    function get_nearest_monster(type?: { no_target?: boolean, type?: string, target?: string, min_xp?: number, max_att?: number },
                                  target?: Entity | string,
                                  where?: { min_xp: number, max_att: number }): Entity;
 

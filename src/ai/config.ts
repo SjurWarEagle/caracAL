@@ -30,5 +30,7 @@ export class Stocks {
 
     static minReserveMerchantHP1 = 1_000;
     static minReserveMerchantMP1 = 1_000;
+    static minReserveMerchantCombound0 = 50;
+    static minReserveMerchantUpgrade0 = 50;
 
 }

@@ -31,8 +31,8 @@ export class ShoppingHandler {
         const availableUpgrade = this.getInventoryStock("scroll0");
         const availableCompound = this.getInventoryStock("cscroll0");
 
-        let amountToBuyUpgrade = Math.max(20 - availableUpgrade, 0);
-        let amountToBuyCompound = Math.max(20 - availableCompound, 0);
+        let amountToBuyUpgrade = Math.max(Stocks.minReserveMerchantUpgrade0 * 1.2 - availableUpgrade, 0);
+        let amountToBuyCompound = Math.max(Stocks.minReserveMerchantCombound0 * 1.2 - availableCompound, 0);
         let amountToBuyHP0 = Math.max(missingHP0, Stocks.minReserveMerchantHP0 * 1.2 - availableHP0, 0);
         let amountToBuyMP0 = Math.max(missingMP0, Stocks.minReserveMerchantMP0 * 1.2 - availableMP0, 0);
         let amountToBuyHP1 = Math.max(missingHP1, Stocks.minReserveMerchantHP1 * 1.2 - availableHP1, 0);
@@ -215,10 +215,10 @@ export class ShoppingHandler {
             } else if (stockMP1 < Stocks.minReserveMerchantMP1) {
                 set_message("restocking (MP1🧪)!");
                 setValue("currentActivityMerchant", "SHOPPING");
-            } else if (stockUpgrade < 10) {
+            } else if (stockUpgrade < Stocks.minReserveMerchantUpgrade0) {
                 set_message("Need restocking (upg)!");
                 setValue("currentActivityMerchant", "SHOPPING");
-            } else if (stockCmb < 10) {
+            } else if (stockCmb < Stocks.minReserveMerchantCombound0) {
                 set_message("Need restocking (cmb)");
                 setValue("currentActivityMerchant", "SHOPPING");
             } else if (stockHP0 < Stocks.minReserveMerchantHP0) {

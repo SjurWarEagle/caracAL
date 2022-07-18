@@ -82,6 +82,10 @@ export class PrimitiveRangedCombat implements ICombat {
     }
 
     private async drawHelperCircle(character: ICharacter, target: Entity, minDistance: number, maxDistance: number) {
+        if (parent.caracAL) {
+            //not needed if no ui
+            return;
+        }
         await clear_drawings();
         if (!target) {
             return;
@@ -91,12 +95,6 @@ export class PrimitiveRangedCombat implements ICombat {
         draw_circle(character.real_x || character.x, character.real_y || character.y, maxDistance, 2, 0x00FF00);
 
         draw_circle(newPosition.x, newPosition.y, 10, 4, 0x00FFFF);
-        // draw_line(character.real_x || character.x
-        //     , character.real_y || character.y - 6
-        //     , newPosition.x
-        //     , newPosition.y - 6
-        //     , 1
-        //     , 0x00FF00);
 
         draw_circle(target.real_x || target.x, (target.real_y || target.y) - 6, 10, 4, 0x0000FF);
         draw_line(character.real_x || character.x
