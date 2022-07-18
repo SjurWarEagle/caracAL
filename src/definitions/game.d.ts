@@ -1,6 +1,8 @@
 type ItemName = string; // TODO: Same as with skills
 
 interface ISpellCasting {
+    fishing?: { "ms": number };
+    mining?: { "ms": number };
     town?: { "ms": number };
 }
 
@@ -11,6 +13,7 @@ export interface ICharacter extends Entity {
     ping?: number;
     party?: string;
     name: string;
+    map: string;
     range: number;
     items: (ItemInfo | undefined)[];
     ctype: string;
@@ -49,6 +52,7 @@ export interface IDestination {
 }
 
 export interface IDestinationSmart {
+    map?: string;
     to: string;
     x?: number;
     y?: number;
@@ -137,6 +141,7 @@ declare global {
         clear_game_logs(): void;
 
         caracAL: boolean;
+        pings: any;
         X: CaracAL;
         party_list: string[];
         party: { [name: string]: ICharacter };
@@ -158,6 +163,8 @@ declare global {
     function respawn(): void;
 
     function log(msg: string): void;
+    function is_on_cooldown(msg: string): boolean;
+    function locate_item(msg: string): number;
 
     function start_character(name: string, script: string): void;
 
@@ -172,10 +179,11 @@ declare global {
     function swap(a: number, b: number): void;
 
     function can_attack(entity: Entity): boolean;
-    function equip(inventorySlot:number,slot:string):void
+    function equip(inventorySlot:number,slot?:string):void
     function buy_with_gold(item: ItemName, q: number): void;
 
     function use(skill: SkillName, target?: Entity): void;
+    function reduce_cooldown(skill: SkillName, time: number): void;
 
     function use_skill(skill: SkillName, target?: Entity): void;
 
@@ -319,6 +327,8 @@ export type SkillName =
     | "energize"
     | "light"
     | "snippet"
+    | "mining"
+    | "fishing"
     | "4fingers"
     | "quickstab"
     | "magiport"

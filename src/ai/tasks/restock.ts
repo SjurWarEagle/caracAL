@@ -35,7 +35,7 @@ export class StockMonitor {
                     // console.log(target, !!target);
                     // console.log(slot, !!slot);
                     if (target && slot !== undefined) {
-                        console.log('Sending slot ' + slot + ' (' + cnt + ') to ' + target.name);
+                        console.log('Sending ' + cnt + 'x ' + itemName + ' from slot ' + slot + ' to ' + target.name);
                         send_item(target, slot, cnt);
                         // remove supply-request because it's done now
                         this.openRequests.get(requesterName)!.delete(itemName);

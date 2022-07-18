@@ -6,6 +6,7 @@ export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
 export type PlayerActivity = "COMBAT" | "SHOPPING";
 export let minutes = 1_000 * 60 * 5;
+let lastRegeneration=0;
 
 // export type PlayerActivity = "COMBAT" | "SHOPPING" | "TRAVEL";
 // let lastDistanceCheckToLeader: number = 0;
@@ -100,8 +101,12 @@ function buff(name: string) {
         return;
     }
 
+    if (simple_distance(target, character) > 200) {
+        return;
+    }
+
     // @ts-ignore
-    if (target.s && !target.s["mluck"]) {
+    if (target.s && !target.s["mluck"] && can_use("mluck")) {
         log("Buffing " + target.name);
         use_skill("mluck", target);
     }
@@ -191,20 +196,31 @@ export function determineMonsterTypeMatchingLevel(): string {
 
     //manual overrride
     rc = "spider";
+    rc = "bee";
+    rc = "crab";
 
     return rc;
 
 }
 
 export function usePotionIfNeeded(): void {
-    if (character.hp / character.max_hp <= .6 && can_use("hp")) {
-        use("hp");
-    } else if (character.mp / character.max_mp <= .6 && can_use("mp")) {
-        use("mp");
-    } else if (character.hp / character.max_hp <= .95) {
+    let oneSecond = 1_000;
+    let msSinceLastRegen = Date.now()-lastRegeneration;
+    let isMoreThan_1Sec = msSinceLastRegen > oneSecond;
+    let isMoreThan_2Sec = msSinceLastRegen > 2*oneSecond;
+
+    if (character.hp / character.max_hp <= .6 && isMoreThan_1Sec) {
+        use("use_hp");
+        lastRegeneration = Date.now();
+    } else if (character.mp / character.max_mp <= .6 && isMoreThan_1Sec) {
+        use("use_mp");
+        lastRegeneration = Date.now();
+    } else if (character.hp / character.max_hp < .99 && isMoreThan_2Sec) {
         use_skill("regen_hp");
-    } else if (character.mp / character.max_mp <= .95) {
+        lastRegeneration = Date.now();
+    } else if (character.mp / character.max_mp < .99 && isMoreThan_2Sec) {
         use_skill("regen_mp");
+        lastRegeneration = Date.now();
     }
 
 }

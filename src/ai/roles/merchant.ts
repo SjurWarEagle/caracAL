@@ -11,12 +11,14 @@ import {StockMonitor} from "../tasks/restock";
 import {startReportingGrafana} from "../tasks/statistic";
 import {Tools} from "../../tools";
 import {EquipmentHandler} from "../tasks/equipment";
+import {ResourceGathering} from "../tasks/resource-gathering";
 
 let lastCheckActivity = 0;
 
 export class Merchant {
     public currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected resourceGathering = new ResourceGathering();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
@@ -81,6 +83,15 @@ export class Merchant {
                 return;
             }
 
+            if (await this.resourceGathering.isGatheringNeeded()){
+                if (character.mp<120 && !character.c.mining){
+                    // regen mana, but do not abort mining!
+                    usePotionIfNeeded();
+                }
+                return;
+            }
+            set_message('💰');
+
             usePotionIfNeeded();
             loot();
 
@@ -91,7 +102,7 @@ export class Merchant {
                 lastCheckActivity = Date.now();
                 if (this.currentActivity === "SHOPPING") {
                     log(this.currentActivity + " === \"SHOPPING\" going to city");
-                    this.shoppingHandler.travelToCity(this);
+                    await this.shoppingHandler.travelToCity(this);
                     return;
                 } else if (this.currentActivity !== "COMBAT") {
                     log(this.currentActivity + " !== \"COMBAT\" doing nothing");

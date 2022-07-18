@@ -1,9 +1,0 @@
-services:
-  caracal:
-    build: ./Dockerfile
-    working_dir: .
-    ports:
-      - 924:924
-#    volumes:
-#      - ./CODE:/data/CODE:
-#      - C:/IdeaProjects/caracAL/CODE:/data/CODE:

@@ -6,13 +6,17 @@ export class Tools {
 
         switch (itemName.toLowerCase()) {
             case "hpot0":
-                return "aaaaaaaaaa1";
+                return "aaaaa";
             case "mpot0":
-                return "aaaaaaaaaa2";
+                return "bbbbb";
             case "cscroll0":
-                return "bbbbbbbbbb1";
+                return "ccccc";
             case "scroll0":
-                return "bbbbbbbbbb2";
+                return "ddddd";
+            case "pickaxe":
+                return "eeeee";
+            case "rod":
+                return "fffff";
             default:
                 return itemName;
         }
