@@ -1,11 +1,24 @@
 import {Entity, ICharacter} from "../../definitions/game";
+import {ICombat} from "./icombat";
+import {TargetInformation} from "./target-information";
+import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 
-export class PrimitiveRangedCombat {
+export class PrimitiveRangedCombat implements ICombat {
+    private targetInformation: TargetInformation;
+
+    constructor() {
+        this.targetInformation = {
+            mon_type: determineMonsterTypeMatchingLevel(),
+            allAttackSameTarget: false,
+        }
+    }
+
     /**
      * primitive attack, just hit when ready
-     * @param mon_type
      */
-    public async attack(mon_type: string): Promise<void> {
+    public async attack(): Promise<void> {
+        const mon_type: string = this.targetInformation.mon_type;
+
         const minDistance = character.range * 0.75;
         const maxDistance = character.range * 0.95;
         const target = get_nearest_monster({no_target: true, type: mon_type});
@@ -124,5 +137,9 @@ export class PrimitiveRangedCombat {
             y: meY + y
         };
 
+    }
+
+    public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
+        this.targetInformation = targetInformation;
     }
 }

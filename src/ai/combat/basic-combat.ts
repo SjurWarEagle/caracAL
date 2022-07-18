@@ -1,10 +1,26 @@
+import {ICombat} from "./icombat";
+import {TargetInformation} from "./target-information";
+import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 
-export class BasicCombat {
+export class BasicCombat implements ICombat {
+    private targetInformation: TargetInformation;
+
+    constructor() {
+        this.targetInformation = {
+            mon_type: determineMonsterTypeMatchingLevel(),
+            allAttackSameTarget:false,
+        }
+    }
+
+    setTargetInfo(targetInformation: TargetInformation): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
     /**
      * primitive attack, just hit when ready
-     * @param mon_type
      */
-    public async attack(mon_type: string): Promise<void> {
+    public async attack(): Promise<void> {
+        const mon_type: string = this.targetInformation.mon_type;
         const target = get_nearest_monster({no_target: true, type: mon_type});
 
         if (target) {

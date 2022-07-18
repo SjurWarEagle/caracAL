@@ -1,5 +1,4 @@
 import {
-    determineMonsterTypeMatchingLevel,
     PlayerActivity,
     startAcceptingInvites,
     startRevive,
@@ -20,7 +19,7 @@ import {ICombat} from "../combat/icombat";
 export class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
-    protected combatStrategy:ICombat = new BasicCombat();
+    protected combatStrategy: ICombat = new BasicCombat();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
@@ -70,7 +69,7 @@ export class Fighter {
             await walkToGroupLead(broadcast);
             set_message('⚔')
 
-            await this.combatStrategy.attack(determineMonsterTypeMatchingLevel());
+            await this.combatStrategy.attack();
         }, (character.ping || 100) * 2);
 
     }

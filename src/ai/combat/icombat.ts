@@ -1,3 +1,6 @@
+import {TargetInformation} from "./target-information";
+
 export interface ICombat {
-    attack(mon_type: string): Promise<void>;
+    attack(): Promise<void>;
+    setTargetInfo(targetInformation: TargetInformation): Promise<void>;
 }
