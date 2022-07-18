@@ -166,6 +166,7 @@ declare global {
     function log(msg: string): void;
     function is_on_cooldown(msg: string): boolean;
     function locate_item(msg: string): number;
+    function consume(inventorySlot:number): void;
 
     function start_character(name: string, script: string): void;
 

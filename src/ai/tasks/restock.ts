@@ -67,13 +67,21 @@ export class StockMonitor {
     public async startWatchingInventoryStock(): Promise<void> {
         setInterval(async () => {
 
-            let currentCntHP = this.getStock('hpot0')
-            if (currentCntHP < Stocks.minCntHP) {
-                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP - currentCntHP, 'hpot0', character.name);
+            let currentCntHP0 = this.getStock('hpot0')
+            if (currentCntHP0 < Stocks.minCntHP0) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP0 - currentCntHP0, 'hpot0', character.name);
             }
-            let currentCntMP = this.getStock('mpot0')
-            if (currentCntMP < Stocks.minCntMP) {
-                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP - currentCntMP, 'mpot0', character.name);
+            let currentCntHP1 = this.getStock('hpot1')
+            if (currentCntHP1 < Stocks.minCntHP1) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP1 - currentCntHP1, 'hpot1', character.name);
+            }
+            let currentCntMP0 = this.getStock('mpot0')
+            if (currentCntMP0 < Stocks.minCntMP0) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP0 - currentCntMP0, 'mpot0', character.name);
+            }
+            let currentCntMP1 = this.getStock('mpot1')
+            if (currentCntMP1 < Stocks.minCntMP1) {
+                await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP1 - currentCntMP1, 'mpot1', character.name);
             }
         }, 10_000)
     }

@@ -42,7 +42,7 @@ export class Merchant {
         startRevive();
         startBuffing();
         startAcceptingInvites();
-        this.shoppingHandler.startRequestingCommonStuff(character);
+        // this.shoppingHandler.startRequestingCommonStuff(character);
         await this.stockMonitor.startDistributeOrders();
 
         this.shoppingHandler.startRestockMonitoring();

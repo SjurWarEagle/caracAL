@@ -6,7 +6,7 @@ export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
 export type PlayerActivity = "COMBAT" | "SHOPPING";
 export let minutes = 1_000 * 60 * 5;
-let lastRegeneration=0;
+let lastRegeneration = 0;
 
 // export type PlayerActivity = "COMBAT" | "SHOPPING" | "TRAVEL";
 // let lastDistanceCheckToLeader: number = 0;
@@ -63,14 +63,28 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
             // console.log(i,itemName,item.q)
             if (itemName === "mpot0") {
                 let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntMP);
+                amount = Math.max(0, amount - Stocks.minCntMP0);
                 if (amount > 0) {
                     log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             } else if (itemName === "hpot0") {
                 let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntHP);
+                amount = Math.max(0, amount - Stocks.minCntHP0);
+                if (amount > 0) {
+                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
+                    send_item(merchant, i, amount);
+                }
+            } else if (itemName === "mpot1") {
+                let amount = item.q || 0;
+                amount = Math.max(0, amount - Stocks.minCntMP1);
+                if (amount > 0) {
+                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
+                    send_item(merchant, i, amount);
+                }
+            } else if (itemName === "hpot1") {
+                let amount = item.q || 0;
+                amount = Math.max(0, amount - Stocks.minCntHP1);
                 if (amount > 0) {
                     log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
@@ -205,11 +219,17 @@ export function determineMonsterTypeMatchingLevel(): string {
 
 export function usePotionIfNeeded(): void {
     let oneSecond = 1_000;
-    let msSinceLastRegen = Date.now()-lastRegeneration;
+    let msSinceLastRegen = Date.now() - lastRegeneration;
     let isMoreThan_1Sec = msSinceLastRegen > oneSecond;
-    let isMoreThan_2Sec = msSinceLastRegen > 2*oneSecond;
+    let isMoreThan_2Sec = msSinceLastRegen > 2 * oneSecond;
 
-    if (character.hp / character.max_hp <= .6 && isMoreThan_1Sec) {
+    if (character.hp / character.max_hp <= .3 && isMoreThan_1Sec) {
+        consume(locate_item("hpot1"));
+        lastRegeneration = Date.now();
+    } else if (character.mp / character.max_mp <= .3 && isMoreThan_1Sec) {
+        consume(locate_item("mpot1"));
+        lastRegeneration = Date.now();
+    } else if (character.hp / character.max_hp <= .6 && isMoreThan_1Sec) {
         use("use_hp");
         lastRegeneration = Date.now();
     } else if (character.mp / character.max_mp <= .6 && isMoreThan_1Sec) {

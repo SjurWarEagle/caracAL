@@ -39,7 +39,7 @@ export class Fighter {
         startRevive();
         startTransferLootToMerchant();
         startAcceptingInvites();
-        this.shoppingHandler.startRequestingCommonStuff(character);
+        // this.shoppingHandler.startRequestingCommonStuff(character);
 
         setInterval(async () => {
             if (character.rip) {

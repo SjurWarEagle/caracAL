@@ -20,10 +20,15 @@ export default {myHelpers};
 
 
 export class Stocks {
-    static minCntHP = 5_000;
-    static minCntMP = 5_000;
+    static minCntHP0 = 5_000;
+    static minCntMP0 = 5_000;
+    static minCntHP1 = 1_000;
+    static minCntMP1 = 1_000;
 
-    static minReservceMerchantHP = 5_000;
-    static minReservceMerchantMP = 5_000;
+    static minReserveMerchantHP0 = 5_000;
+    static minReserveMerchantMP0 = 5_000;
+
+    static minReserveMerchantHP1 = 1_000;
+    static minReserveMerchantMP1 = 1_000;
 
 }

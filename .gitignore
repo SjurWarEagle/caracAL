@@ -9,5 +9,5 @@
 .idea/
 /CODE/*
 !/CODE/README.md
-!/CODE/caracAL/
 .secret
+.cache
