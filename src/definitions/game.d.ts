@@ -140,6 +140,7 @@ declare global {
     interface Window {
         clear_game_logs(): void;
 
+        PIXI: any;
         caracAL: boolean;
         pings: any;
         X: CaracAL;
@@ -257,6 +258,7 @@ declare global {
 
     function stop(what: string): void;
 
+    function clear_drawings(): void;
     function draw_circle(x: number, y: number, radius: number, size?: number, color?: number): Drawing;
 
     function draw_line(x: number, y: number, x2: number, y2: number, size?: number, color?: number): Drawing;

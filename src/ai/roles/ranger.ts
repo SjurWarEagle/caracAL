@@ -1,9 +1,11 @@
 import {Fighter} from "./fighter";
+import {PrimitiveRangedCombat} from "../combat/primitive-ranged-combat";
 
 export class Ranger extends Fighter {
 
     constructor() {
         super();
+        this.combatStrategy = new PrimitiveRangedCombat();
     }
 }
 

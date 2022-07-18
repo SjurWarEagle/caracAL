@@ -1,5 +1,4 @@
 import {
-    attackClosestMonster,
     determineMonsterTypeMatchingLevel,
     PlayerActivity,
     startAcceptingInvites,
@@ -14,11 +13,14 @@ import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
 import {ShoppingHandler} from "../tasks/shopping";
 import {EquipmentHandler} from "../tasks/equipment";
+import {BasicCombat} from "../combat/basic-combat";
+import {ICombat} from "../combat/icombat";
 
 
 export class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
+    protected combatStrategy:ICombat = new BasicCombat();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
@@ -68,7 +70,7 @@ export class Fighter {
             await walkToGroupLead(broadcast);
             set_message('⚔')
 
-            await attackClosestMonster(determineMonsterTypeMatchingLevel());
+            await this.combatStrategy.attack(determineMonsterTypeMatchingLevel());
         }, (character.ping || 100) * 2);
 
     }

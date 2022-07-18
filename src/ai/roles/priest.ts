@@ -1,9 +1,11 @@
 import {Fighter} from "./fighter";
+import {PrimitiveRangedCombat} from "../combat/primitive-ranged-combat";
 
 export class Priest extends Fighter {
 
     constructor() {
         super();
+        this.combatStrategy = new PrimitiveRangedCombat();
     }
 
     public async startHealingTeam(): Promise<void> {
