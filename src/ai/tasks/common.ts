@@ -212,6 +212,8 @@ export function determineMonsterTypeMatchingLevel(): string {
     rc = "spider";
     rc = "bee";
     rc = "crab";
+    // rc = "tortoise";
+    // rc = "phoenix";
 
     return rc;
 

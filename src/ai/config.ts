@@ -19,6 +19,10 @@ let myHelpers: string[] = ["Sjur", "Kosh", "Elvira", "Schnapper"];
 export default {myHelpers};
 
 
+export class RuntimeConfig {
+}
+
+
 export class Stocks {
     static minCntHP0 = 5_000;
     static minCntMP0 = 5_000;

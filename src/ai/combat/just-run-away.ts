@@ -1,15 +1,12 @@
 import {Entity} from "../../definitions/game";
-import {ICombat} from "./icombat";
 import {TargetInformation} from "./target-information";
+import {AbstractCombat} from "./abstract-combat";
 
 
 /**
  * for merchant, just avoid contact with the enemy
  */
-export class JustRunAway implements ICombat {
-
-    constructor() {
-    }
+export class JustRunAway extends AbstractCombat {
 
     /**
      * primitive attack, just hit when ready

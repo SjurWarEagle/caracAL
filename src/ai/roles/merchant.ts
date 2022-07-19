@@ -15,8 +15,8 @@ import {startReportingGrafana} from "../tasks/statistic";
 import {Tools} from "../../tools";
 import {EquipmentHandler} from "../tasks/equipment";
 import {ResourceGathering} from "../tasks/resource-gathering";
-import {ICombat} from "../combat/icombat";
 import {JustRunAway} from "../combat/just-run-away";
+import {AbstractCombat} from "../combat/abstract-combat";
 
 let lastCheckActivity = 0;
 
@@ -26,7 +26,7 @@ export class Merchant {
     protected resourceGathering = new ResourceGathering();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected combatStrategy: ICombat = new JustRunAway();
+    protected combatStrategy: AbstractCombat = new JustRunAway();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 

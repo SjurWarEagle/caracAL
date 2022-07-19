@@ -1,4 +1,4 @@
-import {ACTIVE_HUNT_INFO, ACTIVE_HUNT_MISSING, attackClosestMonster, getCharacter} from "./common";
+import {ACTIVE_HUNT_INFO, ACTIVE_HUNT_MISSING, getCharacter} from "./common";
 import config, {partyMerchant} from "../config";
 import {BroadCastHandler} from "./broadcasts";
 
@@ -68,8 +68,8 @@ export class HuntingHandler {
         }
 
         if ((hunt.c > 0) && whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
-            await attackClosestMonster(hunt.id);
-            return true;
+//FIXME            await attackClosestMonster(hunt.id);
+//FIXME            return true;
         }
 
         return false;

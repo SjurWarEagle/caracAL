@@ -18,6 +18,7 @@ export interface ICharacter extends Entity {
     items: (ItemInfo | undefined)[];
     ctype: string;
     rip: boolean;
+    afk: boolean;
     gold: number;
     xp: number;
     y: number;
@@ -81,7 +82,7 @@ export interface Entity {
     real_y?: number;
     going_x?: number;
     going_y?: number;
-range?: number;
+    range?: number;
     hp: number;
     cc: number;
     speed: number;
@@ -211,6 +212,7 @@ declare global {
     function game_log(msg: string, color?: string): void;
 
     function leave_party(): void;
+    function get_monster(id:string): Entity|undefined;
 
     function accept_party_invite(from: string): void;
 

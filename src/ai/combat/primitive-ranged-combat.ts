@@ -1,12 +1,12 @@
 import {Entity, ICharacter} from "../../definitions/game";
-import {ICombat} from "./icombat";
 import {TargetInformation} from "./target-information";
 import {determineMonsterTypeMatchingLevel} from "../tasks/common";
+import {AbstractCombat} from "./abstract-combat";
 
-export class PrimitiveRangedCombat implements ICombat {
-    private targetInformation: TargetInformation;
+export class PrimitiveRangedCombat extends AbstractCombat{
 
     constructor() {
+        super();
         this.targetInformation = {
             mon_type: determineMonsterTypeMatchingLevel(),
             allAttackSameTarget: false,
@@ -17,13 +17,14 @@ export class PrimitiveRangedCombat implements ICombat {
      * primitive attack, just hit when ready
      */
     public async attack(): Promise<void> {
-        const mon_type: string = this.targetInformation.mon_type;
+        const mon_type: string = this.targetInformation!.mon_type;
 
         const minDistance = character.range * 0.75;
         const maxDistance = character.range * 0.95;
-        const target = get_nearest_monster({no_target: true, type: mon_type});
+        let target = this.getNewTarget(mon_type);
 
-        await this.drawHelperCircle(character, target, minDistance, maxDistance);
+
+        await this.drawHelperCircle(character, target!, minDistance, maxDistance);
         if (target) {
             change_target(target);
 
@@ -140,4 +141,5 @@ export class PrimitiveRangedCombat implements ICombat {
     public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
         this.targetInformation = targetInformation;
     }
+
 }
