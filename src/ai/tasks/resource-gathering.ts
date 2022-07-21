@@ -74,7 +74,7 @@ export class ResourceGathering {
             // console.log("Mining is on cooldown");
             if (character.map === 'tunnel') {
                 if (!smart.moving) {
-                    smart_move("main");
+                    await smart_move("main");
                 }
             }
             return false;
@@ -112,6 +112,7 @@ export class ResourceGathering {
             }
         }
 
+        console.log('start mining');
         use_skill('mining');
         if (!character.c.mining) {
             // smart_move("main");

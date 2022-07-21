@@ -39,12 +39,14 @@
   },
   "dependencies": {
     "bot-web-interface": "2.0.9",
+    "g": "^2.0.1",
     "inquirer": "8.0.0",
     "jquery": "3.6.0",
     "jsdom": "16.5.3",
     "json-storage-fs": "2.0.2",
     "logrotate-stream": "0.2.8",
     "node-fetch": "2.6.1",
+    "nodemon": "^2.0.19",
     "pngjs": "6.0.0",
     "pretty-ms": "7.0.1",
     "socket.io-client": "4.2.0"

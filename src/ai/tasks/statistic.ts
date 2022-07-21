@@ -43,19 +43,19 @@ export class StatisticDistributor {
     }
 
     private async publishCharAvgData() {
-        await this.postData('http://localhost:3700/charAvg', this.charAvgCollector.getAndReset());
+        await this.postData('http://localhost:3700/api/charAvg', this.charAvgCollector.getAndReset());
     }
 
     private async publishCharData() {
         // console.log(parent.character);
         // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
-        await this.postData('http://localhost:3700/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
+        await this.postData('http://localhost:3700/api/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
     }
 
     private async publishGameInfoData() {
         // console.log(parent.character);
         // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
-        await this.postData('http://localhost:3700/GameInfo', G)
+        await this.postData('http://localhost:3700/api/gameInfo', G)
     }
 
     private async postData(url = '', data = {}): Promise<void> {
