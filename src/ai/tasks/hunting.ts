@@ -6,14 +6,15 @@ import {BroadCastHandler} from "./broadcasts";
 let daisy = parent.G.maps.main.npcs[23];
 let monsterHunterLocations = {
     x: daisy.position[0],
-    y: daisy.position[1] + 20
+    y: daisy.position[1]
 };
 
-let whiteListHuntingTargets = ["goo"];
 // let whiteListHuntingTargets = ["goo", "bee", "crocodile", "crab", "chicken", "snake", "tortoise"];
 const rememberedHunts: { [char: string]: any } = {};
 
 export class HuntingHandler {
+    public whiteListHuntingTargets: string[] = ["goo", 'bee', 'chicken'];
+
     constructor(private broadcasthandler: BroadCastHandler) {
     }
 
@@ -67,9 +68,10 @@ export class HuntingHandler {
             return false;
         }
 
-        if ((hunt.c > 0) && whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
-//FIXME            await attackClosestMonster(hunt.id);
-//FIXME            return true;
+        if ((hunt.c > 0) && this.whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
+            //attack is done by the common target-findinging in combat
+            // await attackClosestMonster(hunt.id);
+            return true;
         }
 
         return false;
@@ -79,7 +81,7 @@ export class HuntingHandler {
     /**
      * @return if quest can be turned in
      */
-    public finishHuntingQuestIfDone(): boolean {
+    public async finishHuntingQuestIfDone(): Promise<boolean> {
         if (character.ctype == "merchant") {
             return false;
         }
@@ -95,8 +97,11 @@ export class HuntingHandler {
         }
         if (hunt.c <= 0) {
             if (!smart.moving) {
-                log("turning in monsterhunter-quest");
-                smart_move(monsterHunterLocations);
+                // console.log("turning in monsterhunter-quest, to main map");
+                await smart_move('main', () => {
+                    // console.log("turning in monsterhunter-quest, to daisy");
+                    smart_move(monsterHunterLocations)
+                });
             } else {
                 // @ts-ignore
                 parent.socket.emit("monsterhunt");
@@ -121,7 +126,9 @@ export class HuntingHandler {
             // console.log(monsterHunterLocations);
             if (!smart.moving) {
                 log("fetching new monsterhunter-quest");
-                smart_move(monsterHunterLocations);
+                smart_move('main', () => {
+                    smart_move(monsterHunterLocations);
+                });
             } else {
                 // if (is_in_range(daisy)) {
                 // @ts-ignore

@@ -5,7 +5,7 @@ export class Priest extends Fighter {
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat();
+        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler);
     }
 
     public async startHealingTeam(): Promise<void> {

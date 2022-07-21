@@ -1,11 +1,12 @@
 import {TargetInformation} from "./target-information";
 import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 import {AbstractCombat} from "./abstract-combat";
+import {HuntingHandler} from "../tasks/hunting";
 
 export class BasicCombat extends AbstractCombat {
 
-    constructor() {
-        super();
+    constructor(protected huntingHandler:HuntingHandler) {
+        super(huntingHandler);
         this.targetInformation = {
             mon_type: determineMonsterTypeMatchingLevel(),
             allAttackSameTarget: false,

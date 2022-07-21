@@ -75,7 +75,7 @@ const uploader = new ALUploader();
 ////////////////////////////////////////////////////////////////////////////////
 
 async function start() {
-    // await uploader.uploadFile("dist/warrior.js", "warrior", 2);
+    await uploader.uploadFile("CODE/caracAL/chars/warrior.js", "warrior", 2);
     await uploader.uploadFile("CODE/caracAL/chars/priest.js", "priest", 3);
     await uploader.uploadFile("CODE/caracAL/chars/merchant.js", "merchant", 4);
     // await uploader.uploadFile("dist/merchant.js", "merchant", 4);

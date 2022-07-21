@@ -1,12 +1,66 @@
-const https = require("https");
-const httpsAgent = new https.Agent({
-    rejectUnauthorized: false
-});
+// const https = require("https");
+// const httpsAgent = new https.Agent({
+//     rejectUnauthorized: false
+// });
+
+import {CharAvgCollector} from "./char-avg-collector";
 
 export class StatisticDistributor {
-    private async postData(url = '', data = {}) {
+
+    constructor(private charAvgCollector: CharAvgCollector) {
+        charAvgCollector.startCollecting();
+    }
+
+    /**
+     * publish global data, only one char needs this
+     *
+     * 1x @ 1min
+     */
+    public async startPublishingCharSpecificData() {
+        setInterval(() => {
+            this.publishCharData();
+        }, 60_000)
+    }
+
+    /**
+     * publish collected avg-data
+     *
+     *  @ 5min
+     */
+    public async startPublishingCharAvgData() {
+        setInterval(() => {
+            this.publishCharAvgData();
+        }, 60_000)
+    }
+
+    /**
+     * 1x @ 5min
+     */
+    public async startPublishingGlobalData() {
+        setInterval(() => {
+            this.publishGameInfoData();
+        }, 300_000)
+    }
+
+    private async publishCharAvgData() {
+        await this.postData('http://localhost:3700/charAvg', this.charAvgCollector.getAndReset());
+    }
+
+    private async publishCharData() {
+        // console.log(parent.character);
+        // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
+        await this.postData('http://localhost:3700/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
+    }
+
+    private async publishGameInfoData() {
+        // console.log(parent.character);
+        // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
+        await this.postData('http://localhost:3700/GameInfo', G)
+    }
+
+    private async postData(url = '', data = {}): Promise<void> {
         // Default options are marked with *
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, *cors, same-origin
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -19,17 +73,28 @@ export class StatisticDistributor {
             referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
-        return response.json(); // parses JSON response into native JavaScript objects
     }
 
     private stringifyWithoutMethods(object: any): string {
         let simpleObject: any = {};
-        for (var prop in object) {
+        for (let prop in object) {
             if (!object.hasOwnProperty(prop)) {
                 continue;
             }
-            if (typeof (object[prop]) == 'object') {
+            if (prop.startsWith("_")) {
                 continue;
+            }
+            if (typeof (object[prop]) == 'object') {
+                //allow some objects
+                if (!prop.startsWith("items")
+                    && !prop.startsWith("slots")
+                    && prop !== "s"
+                    && prop !== "c"
+                ) {
+                    // console.log(prop);
+                    continue;
+                }
+                // continue;
             }
             if (typeof (object[prop]) == 'function') {
                 continue;
@@ -38,48 +103,4 @@ export class StatisticDistributor {
         }
         return JSON.stringify(simpleObject); // returns cleaned up JSON
     };
-}
-
-export function startReportingGrafana() {
-    //tmp disabled
-    return;
-    setInterval(() => {
-
-        const headers = {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        ;
-
-        fetch("http://192.168.73.58:5000/post", {
-            method: "POST",
-            // @ts-ignore
-            agent: httpsAgent,
-            body: JSON.stringify({
-                topic: "adventureland/" + character.name,
-                message: JSON.stringify({
-                    "name": character.name,
-                    "gold ": character.gold,
-                    "level": character.level,
-                    "xp": character.xp,
-                    "remain_xp": G.levels[character.level] - character.xp,
-                    "hp": character.hp,
-                    "max_hp": character.max_hp,
-                    "mp": character.mp,
-                    "max_mp": character.max_mp,
-                    "cc": character.cc,
-                    "speed": character.speed,
-                    "resistance": character.resistance,
-                    "armor": character.armor,
-                    "ping": character.ping,
-                    "attack": character.attack
-                }),
-                key: "mykey"
-            }),
-            headers: headers
-        });
-        // .then((res: any) => {
-        //   return res.json();
-        // })
-        // .then(console.log);
-    }, 60_000);
 }

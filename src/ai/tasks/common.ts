@@ -202,6 +202,8 @@ export function determineMonsterTypeMatchingLevel(): string {
         rc = "bee";
     } else if (character.level < 50) {
         rc = "tortoise";
+    } else if (character.level < 60) {
+        rc = "spider";
     } else if (character.level < 70) {
         rc = "pppompom";
     } else {
@@ -209,9 +211,11 @@ export function determineMonsterTypeMatchingLevel(): string {
     }
 
     //manual overrride
-    rc = "spider";
+    // rc = "spider";
     rc = "bee";
-    rc = "crab";
+    // rc = "goo";
+    // rc = "armadillo";
+    // rc = "osnake";
     // rc = "tortoise";
     // rc = "phoenix";
 

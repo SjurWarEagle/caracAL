@@ -11,12 +11,13 @@ import {getValue} from "../config";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
-import {startReportingGrafana} from "../tasks/statistic";
+import {StatisticDistributor} from "../tasks/statistic";
 import {Tools} from "../../tools";
 import {EquipmentHandler} from "../tasks/equipment";
 import {ResourceGathering} from "../tasks/resource-gathering";
 import {JustRunAway} from "../combat/just-run-away";
 import {AbstractCombat} from "../combat/abstract-combat";
+import {CharAvgCollector} from "../tasks/char-avg-collector";
 
 let lastCheckActivity = 0;
 
@@ -26,11 +27,16 @@ export class Merchant {
     protected resourceGathering = new ResourceGathering();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected combatStrategy: AbstractCombat = new JustRunAway();
+    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
+    protected combatStrategy: AbstractCombat = new JustRunAway(this.huntingHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
     async start() {
+        await this.statisticDistributor.startPublishingGlobalData();
+        await this.statisticDistributor.startPublishingCharSpecificData();
+        await this.statisticDistributor.startPublishingCharAvgData();
+
         await this.equipmentHandler.startBeNotNaked();
 
         await this.stockMonitor.startCollectingRequests();
@@ -44,7 +50,6 @@ export class Merchant {
             Tools.sortInventory();
         }, 60_000);
 
-        startReportingGrafana();
         startRevive();
         startBuffing();
         startAcceptingInvites();

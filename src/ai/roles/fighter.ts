@@ -7,7 +7,7 @@ import {
     usePotionIfNeeded,
     walkToGroupLead
 } from "../tasks/common";
-import {startReportingGrafana} from "../tasks/statistic";
+import {StatisticDistributor} from "../tasks/statistic";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
@@ -15,27 +15,33 @@ import {ShoppingHandler} from "../tasks/shopping";
 import {EquipmentHandler} from "../tasks/equipment";
 import {BasicCombat} from "../combat/basic-combat";
 import {AbstractCombat} from "../combat/abstract-combat";
+import {CharAvgCollector} from "../tasks/char-avg-collector";
 
 
 export class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
-    protected combatStrategy: AbstractCombat = new BasicCombat();
+    protected charAvgCollector: CharAvgCollector = new CharAvgCollector();
+    protected huntingHandler = new HuntingHandler(this.broadcastHandler);
+    protected combatStrategy: AbstractCombat = new BasicCombat(this.huntingHandler);
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected huntingHandler = new HuntingHandler(this.broadcastHandler);
+    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
 
     constructor() {
+        this.statisticDistributor.startPublishingCharSpecificData();
+        this.statisticDistributor.startPublishingCharAvgData();
+
         let broadcast = new BroadCastHandler();
         broadcast.listenForLastLeaderPosition();
         this.huntingHandler.startBroadCastHunts();
 
         this.stockMonitor.startWatchingInventoryStock();
         this.equipmentHandler.startBeNotNaked();
+        this.charAvgCollector.startCollecting();
 
-        startReportingGrafana();
         startRevive();
         startTransferLootToMerchant();
         startAcceptingInvites();
@@ -54,7 +60,7 @@ export class Fighter {
                 set_message('➕🏹');
                 return;
             }
-            if (this.huntingHandler.finishHuntingQuestIfDone()) {
+            if (await this.huntingHandler.finishHuntingQuestIfDone()) {
                 set_message('🆗🏹');
                 return;
             }

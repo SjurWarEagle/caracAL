@@ -5,7 +5,7 @@ export class Ranger extends Fighter {
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat();
+        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler);
     }
 }
 

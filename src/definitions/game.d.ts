@@ -18,7 +18,7 @@ export interface ICharacter extends Entity {
     items: (ItemInfo | undefined)[];
     ctype: string;
     rip: boolean;
-    afk: boolean;
+    afk: string;
     gold: number;
     xp: number;
     y: number;
@@ -145,6 +145,7 @@ declare global {
         PIXI: any;
         caracAL: boolean;
         pings: any;
+        character: ICharacter;
         X: CaracAL;
         party_list: string[];
         party: { [name: string]: ICharacter };
@@ -155,6 +156,7 @@ declare global {
         stop_runner(): void;
     }
 
+    var game: any;
     var $: any;
     var character: ICharacter;
     var game_logs: any[];
