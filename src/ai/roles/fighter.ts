@@ -70,17 +70,13 @@ export class Fighter {
             }
 
             if (await this.huntingHandler.huntForQuest()) {
-                set_message('🏹');
                 return;
             }
             await walkToGroupLead(broadcast);
             set_message('⚔')
 
 
-            await this.combatStrategy.setTargetInfo({
-                mon_type: determineMonsterTypeMatchingLevel(),
-                allAttackSameTarget: false,
-            });
+            await this.combatStrategy.setTargetInfo(determineMonsterTypeMatchingLevel());
             await this.combatStrategy.attack();
         }, (character.ping || 100) * 2);
 

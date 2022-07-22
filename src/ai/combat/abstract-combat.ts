@@ -6,6 +6,7 @@ import {getCharacter} from "../tasks/common";
 
 export abstract class AbstractCombat {
     protected targetInformation?: TargetInformation = undefined;
+    protected target?: Entity;
 
     public abstract attack(): Promise<void>;
 
@@ -14,7 +15,7 @@ export abstract class AbstractCombat {
     constructor(protected huntingHandler: HuntingHandler) {
     }
 
-    protected getNewTarget(mon_type: string): Entity | undefined {
+    protected async getNewTarget(mon_type: string): Promise<Entity | undefined> {
         if (!this.targetInformation) {
             return;
         }
@@ -24,38 +25,49 @@ export abstract class AbstractCombat {
         // @ts-ignore
         const hunt = me.s["monsterhunt"];
         if ((hunt.c > 0) && this.huntingHandler.whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
+            set_message('🏹');
             mon_type = hunt.id;
+        } else {
+            set_message('⚔');
         }
 
-
-        let target;
         let commonTargetId = localStorage.getItem('commonTargetId');
         if (this.targetInformation.allAttackSameTarget && commonTargetId) {
             // console.log('⚔ using common existing target');
-            target = get_monster(commonTargetId);
-            if (!target) {
+            this.target = get_monster(commonTargetId);
+            if (!this.target) {
                 //target was killed?
                 localStorage.removeItem('commonTargetId');
                 return undefined;
             }
         } else {
             if (this.targetInformation.allAttackSameTarget) {
-                target = get_nearest_monster({type: mon_type, target: partyMerchant});
-                if (!target) {
-                    target = get_nearest_monster({type: mon_type});
+                this.target = get_nearest_monster({type: mon_type, target: partyMerchant});
+                if (!this.target) {
+                    this.target = get_nearest_monster({type: mon_type});
                 }
             } else {
-                target = get_nearest_monster({type: mon_type, target: partyMerchant});
-                if (!target) {
-                    target = get_nearest_monster({no_target: true, type: mon_type});
+                this.target = get_nearest_monster({type: mon_type, target: partyMerchant});
+                if (!this.target) {
+                    this.target = await get_nearest_monster({no_target: true, type: mon_type});
                 }
+                if (!this.target) {
+                    //if no other target, then attack something
+                    this.target = get_nearest_monster({type: mon_type});
+                }
+                if (!this.target && !smart.moving) {
+                    console.log('moving to general monster area for', mon_type);
+                    smart_move(mon_type)
+                }
+                // console.log('hunting',target,mon_type);
+
             }
-            if (target && this.targetInformation.allAttackSameTarget && !commonTargetId) {
+            if (this.target && this.targetInformation.allAttackSameTarget && !commonTargetId) {
                 // console.log('⚔ saving new common target');
-                localStorage.setItem('commonTargetId', target.id!);
+                localStorage.setItem('commonTargetId', this.target.id!);
             }
         }
-        return target;
+        return this.target;
     }
 
 }

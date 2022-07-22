@@ -4,14 +4,11 @@ import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 import {AbstractCombat} from "./abstract-combat";
 import {HuntingHandler} from "../tasks/hunting";
 
-export class PrimitiveRangedCombat extends AbstractCombat{
+export class PrimitiveRangedCombat extends AbstractCombat {
 
-    constructor(protected huntingHandler:HuntingHandler) {
+    constructor(protected huntingHandler: HuntingHandler) {
         super(huntingHandler);
-        this.targetInformation = {
-            mon_type: determineMonsterTypeMatchingLevel(),
-            allAttackSameTarget: false,
-        }
+        this.targetInformation = determineMonsterTypeMatchingLevel();
     }
 
     /**
@@ -20,9 +17,15 @@ export class PrimitiveRangedCombat extends AbstractCombat{
     public async attack(): Promise<void> {
         const mon_type: string = this.targetInformation!.mon_type;
 
-        const minDistance = character.range * 0.75;
+        let target = await this.getNewTarget(mon_type);
+        let minDistance;
+        if (target) {
+            minDistance = Math.min((target.range||1_000) * 2, character.range * 0.75);
+        } else {
+            minDistance = character.range * 0.75;
+        }
+
         const maxDistance = character.range * 0.95;
-        let target = this.getNewTarget(mon_type);
 
 
         await this.drawHelperCircle(character, target!, minDistance, maxDistance);

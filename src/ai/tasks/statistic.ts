@@ -47,14 +47,10 @@ export class StatisticDistributor {
     }
 
     private async publishCharData() {
-        // console.log(parent.character);
-        // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
         await this.postData('http://localhost:3700/api/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
     }
 
     private async publishGameInfoData() {
-        // console.log(parent.character);
-        // console.log(JSON.parse(this.stringifyWithoutMethods(parent.character)));
         await this.postData('http://localhost:3700/api/gameInfo', G)
     }
 

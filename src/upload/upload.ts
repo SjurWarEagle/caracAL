@@ -78,9 +78,6 @@ async function start() {
     await uploader.uploadFile("CODE/caracAL/chars/warrior.js", "warrior", 2);
     await uploader.uploadFile("CODE/caracAL/chars/priest.js", "priest", 3);
     await uploader.uploadFile("CODE/caracAL/chars/merchant.js", "merchant", 4);
-    // await uploader.uploadFile("dist/merchant.js", "merchant", 4);
-    // await uploader.uploadFile("dist/mage.js", "mage", 5);
-    // await uploader.uploadFile("CODE/caracAL/chars/ranger.js", "ranger", 6);
     await uploader.uploadFile("CODE/caracAL/chars/ranger.js", "ranger", 7);
 }
 

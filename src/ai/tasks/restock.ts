@@ -67,6 +67,10 @@ export class StockMonitor {
     public async startWatchingInventoryStock(): Promise<void> {
         setInterval(async () => {
 
+            let currentTracker = this.getStock('tracker')
+            if (currentTracker < 1) {
+                await this.broadCastHandler.orderItems(partyMerchant, 1, 'tracker', character.name);
+            }
             let currentCntHP0 = this.getStock('hpot0')
             if (currentCntHP0 < Stocks.minCntHP0) {
                 await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP0 - currentCntHP0, 'hpot0', character.name);

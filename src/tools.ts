@@ -5,12 +5,14 @@ export class Tools {
         }
 
         switch (itemName.toLowerCase()) {
-            case "hpot0":
+            case "tracker":
                 return "aaaaa0";
+            case "hpot0":
+                return "aaaaa1";
             case "mpot0":
                 return "bbbbb0";
             case "hpot1":
-                return "aaaaa1";
+                return "aaaaa5";
             case "mpot1":
                 return "bbbbb1";
             case "cscroll0":

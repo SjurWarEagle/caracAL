@@ -1,6 +1,7 @@
 import config, {getValue, partyLeader, partyMerchant, setValue, Stocks} from "../config";
 import {Entity} from "../../definitions/game";
 import {BroadCastHandler} from "./broadcasts";
+import {TargetInformation} from "../combat/target-information";
 
 export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
@@ -57,6 +58,9 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
         for (let i = 0; i < character.items.length - 1; i++) {
             const item = character.items[i];
             if (!item) {
+                continue;
+            }
+            if (item.name === 'tracker') {
                 continue;
             }
             let itemName = item.name;
@@ -174,10 +178,13 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
         let dX = Math.abs(broadcast.lastLeaderPosition.x - me.x);
         let dY = Math.abs(broadcast.lastLeaderPosition.y - me.y);
         let dist = Math.sqrt(dX * dX + dY * dY);
-        if (dist > 150) {
-            smart_move({x: broadcast.lastLeaderPosition.x + 5, y: broadcast.lastLeaderPosition.y + 5});
+        if (character.map === broadcast.lastLeaderPosition.map && dist > 150) {
+            smart_move({
+                map: broadcast.lastLeaderPosition.map,
+                x: broadcast.lastLeaderPosition.x + 5,
+                y: broadcast.lastLeaderPosition.y + 5
+            });
         }
-
     } else {
         let dist = simple_distance(mainChar, getCharacter(character.name));
         if (dist > 150) {
@@ -192,32 +199,37 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 }
 
 
-export function determineMonsterTypeMatchingLevel(): string {
-    let rc;
+export function determineMonsterTypeMatchingLevel(): TargetInformation {
+    let rc: TargetInformation = {
+        mon_type: '',
+        allAttackSameTarget: true
+    };
     if (character.level < 30) {
-        rc = "goo";
+        rc.mon_type = "goo";
     } else if (character.level < 35) {
-        rc = "crab";
+        rc.mon_type = "crab";
     } else if (character.level < 40) {
-        rc = "bee";
+        rc.mon_type = "bee";
     } else if (character.level < 50) {
-        rc = "tortoise";
+        rc.mon_type = "tortoise";
     } else if (character.level < 60) {
-        rc = "spider";
+        rc.mon_type = "spider";
     } else if (character.level < 70) {
-        rc = "pppompom";
+        rc.mon_type = "pppompom";
     } else {
-        rc = "spider";
+        rc.mon_type = "spider";
     }
 
     //manual overrride
-    // rc = "spider";
-    rc = "bee";
-    // rc = "goo";
-    // rc = "armadillo";
-    // rc = "osnake";
-    // rc = "tortoise";
-    // rc = "phoenix";
+    // rc.allAttackSameTarget = true;
+    rc.allAttackSameTarget = false;
+    // rc.mon_type = "spider";
+    rc.mon_type = "bee";
+    // rc.mon_type = "goo";
+    // rc.mon_type = "armadillo";
+    // rc.mon_type = "osnake";
+    // rc.mon_type = "tortoise";
+    // rc.mon_type = "phoenix";
 
     return rc;
 

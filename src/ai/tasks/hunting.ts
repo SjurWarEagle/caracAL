@@ -9,11 +9,12 @@ let monsterHunterLocations = {
     y: daisy.position[1]
 };
 
-// let whiteListHuntingTargets = ["goo", "bee", "crocodile", "crab", "chicken", "snake", "tortoise"];
 const rememberedHunts: { [char: string]: any } = {};
 
 export class HuntingHandler {
     public whiteListHuntingTargets: string[] = ["goo", 'bee', 'chicken'];
+
+    // frog - only if ranges char, evade is too much
 
     constructor(private broadcasthandler: BroadCastHandler) {
     }
@@ -68,11 +69,11 @@ export class HuntingHandler {
             return false;
         }
 
-        if ((hunt.c > 0) && this.whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
-            //attack is done by the common target-findinging in combat
-            // await attackClosestMonster(hunt.id);
-            return true;
-        }
+        // if ((hunt.c > 0) && this.whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
+        //     //attack is done by the common target-findinging in combat
+        //     // await attackClosestMonster(hunt.id);
+        //     return true;
+        // }
 
         return false;
     }

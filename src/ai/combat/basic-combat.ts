@@ -5,12 +5,9 @@ import {HuntingHandler} from "../tasks/hunting";
 
 export class BasicCombat extends AbstractCombat {
 
-    constructor(protected huntingHandler:HuntingHandler) {
+    constructor(protected huntingHandler: HuntingHandler) {
         super(huntingHandler);
-        this.targetInformation = {
-            mon_type: determineMonsterTypeMatchingLevel(),
-            allAttackSameTarget: false,
-        }
+        this.targetInformation = determineMonsterTypeMatchingLevel();
     }
 
     public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
@@ -22,24 +19,34 @@ export class BasicCombat extends AbstractCombat {
      */
     public async attack(): Promise<void> {
         const mon_type: string = this.targetInformation!.mon_type;
-        let target = this.getNewTarget(mon_type);
 
-        if (target) {
-            change_target(target);
-            if (can_attack(target)) {
+        if (get_targeted_monster() !== this.target) {
+            //is target still the targeted entity?
+            this.target = undefined;
+        }
+
+
+        // no target? then get one
+        if (!this.target) {
+            this.target = await this.getNewTarget(mon_type);
+        }
+
+        if (this.target) {
+            await change_target(this.target);
+            if (can_attack(this.target)) {
                 try {
-                    await attack(target);
+                    await attack(this.target);
                 } catch (e) {
                     // log(JSON.stringify(e));
                 }
             } else {
-                const dist = simple_distance(target, character);
+                const dist = simple_distance(this.target, character);
                 if (!is_moving(character)
                     && dist > character.range - 10) {
-                    if (can_move_to(target.real_x!, target.real_y!)) {
-                        await move((target.real_x! + character.real_x!) / 2, (target.real_y! + character.real_y!) / 2);
+                    if (can_move_to(this.target.real_x!, this.target.real_y!)) {
+                        await move((this.target.real_x! + character.real_x!) / 2, (this.target.real_y! + character.real_y!) / 2);
                     } else {
-                        await smart_move(target);
+                        await smart_move(this.target);
                     }
                 }
             }

@@ -8,7 +8,7 @@ export class BroadCastHandler {
     public static readonly BROADCAST_ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
     public static readonly BROADCAST_LEADER_POSITION = 'LEADER_POSITION';
 
-    public lastLeaderPosition: { x: number, y: number } = {x: 0, y: 0};
+    public lastLeaderPosition: { map: string, x: number, y: number } = {map: 'main', x: 0, y: 0};
 
     public listenForLastLeaderPosition(): void {
         character.on("cm", (msg) => {

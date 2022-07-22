@@ -12,7 +12,8 @@
     "start": "node main.js",
     "upload": "ts-node src/upload/upload.ts",
     "build:upload": "run-s build:all:dev upload ",
-    "start2": "run-s build:all:dev rm:localstorage start"
+    "start:withbuild": "run-s build:all:dev rm:localstorage start",
+    "start-demon": "nodemon --exec 'npm run start:withbuild' --watch CODE/**/js --watch src -e js,ts"
   },
   "author": "number_e",
   "license": "MIT",
@@ -35,7 +36,8 @@
     "rimraf": "3.0.2",
     "ts-node": "10.9.1",
     "tslint": "6.1.3",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "nodemon": "2.0.19"
   },
   "dependencies": {
     "bot-web-interface": "2.0.9",
