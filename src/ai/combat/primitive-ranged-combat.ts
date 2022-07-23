@@ -39,6 +39,9 @@ export class PrimitiveRangedCombat extends AbstractCombat {
                 // return;
                 // console.log('mustIncreaseDistance=true');
             }
+            if (is_on_cooldown("attack")) {
+                return;
+            }
             if (can_attack(target)) {
                 try {
                     await attack(target);

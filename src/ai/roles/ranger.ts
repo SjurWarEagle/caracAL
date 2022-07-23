@@ -7,6 +7,10 @@ export class Ranger extends Fighter {
         super();
         this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler);
     }
+
+    async performRoleSpecificTasks(): Promise<boolean> {
+        return false;
+    }
 }
 
 // noinspection JSUnusedLocalSymbols

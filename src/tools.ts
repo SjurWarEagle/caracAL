@@ -2,6 +2,33 @@ import {ItemInfo} from "./definitions/game";
 import {sortBy} from "lodash";
 
 export class Tools {
+
+    public getInventoryStockWithSpecialLevel(itemName: string, level: number): number {
+        let candidate = character.items.find((item) => {
+            return !!(item && (item.name === itemName && (item.level || 0) === level));
+        });
+        let availableInInventory = 0;
+        if (candidate) {
+            availableInInventory = candidate.q || 0;
+        }
+
+        return availableInInventory;
+    }
+
+    public getInventoryStock(itemName: string): number {
+        let candidate = character.items.find((item) => {
+            // noinspection PointlessBooleanExpressionJS
+            return !!(item && (item.name === itemName));
+        });
+        let availableInInventory = 0;
+        if (candidate) {
+            availableInInventory = candidate.q || 0;
+        }
+
+        return availableInInventory;
+    }
+
+
     private convertToSortingName(itemName: string) {
         if (!itemName) {
             return itemName;

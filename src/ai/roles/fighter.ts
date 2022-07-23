@@ -18,7 +18,7 @@ import {AbstractCombat} from "../combat/abstract-combat";
 import {CharAvgCollector} from "../tasks/char-avg-collector";
 
 
-export class Fighter {
+export abstract class Fighter {
     protected currentActivity: PlayerActivity = "COMBAT";
     protected broadcastHandler = new BroadCastHandler();
     protected charAvgCollector: CharAvgCollector = new CharAvgCollector();
@@ -30,7 +30,7 @@ export class Fighter {
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
 
-    constructor() {
+    protected constructor() {
         this.statisticDistributor.startPublishingCharSpecificData();
         this.statisticDistributor.startPublishingCharAvgData();
 
@@ -55,6 +55,10 @@ export class Fighter {
 
             usePotionIfNeeded();
             loot();
+
+            if (await this.performRoleSpecificTasks()) {
+                return;
+            }
 
             if (this.huntingHandler.getNewHuntingQuest()) {
                 set_message('➕🏹');
@@ -81,5 +85,7 @@ export class Fighter {
         }, (character.ping || 100) * 2);
 
     }
+
+    abstract performRoleSpecificTasks():Promise<boolean>;
 }
 

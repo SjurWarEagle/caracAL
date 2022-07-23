@@ -4,6 +4,10 @@ export class Mage extends Fighter {
     constructor() {
         super();
     }
+
+    async performRoleSpecificTasks(): Promise<boolean> {
+        return false;
+    }
 }
 
 // noinspection JSUnusedLocalSymbols

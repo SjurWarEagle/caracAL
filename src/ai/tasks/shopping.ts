@@ -1,5 +1,6 @@
 import config, {getValue, setValue, Stocks} from "../config";
 import {Merchant} from "../roles/merchant";
+import {Tools} from "../../tools";
 
 type ShoppingItemName = "hp" | "mp";
 
@@ -15,21 +16,22 @@ class ShoppingList {
 export class ShoppingHandler {
 
     public async travelToCity(p: Merchant) {
-        const availableHP0 = this.getInventoryStock("hpot0");
+        const tool = new Tools();
+        const availableHP0 = tool.getInventoryStock("hpot0");
         const requestedHP0 = this.getTotalRequested("hpot0");
         let missingHP0 = Math.min(Stocks.minReserveMerchantHP0, (requestedHP0 - availableHP0));
-        const availableHP1 = this.getInventoryStock("hpot1");
+        const availableHP1 = tool.getInventoryStock("hpot1");
         const requestedHP1 = this.getTotalRequested("hpot1");
         let missingHP1 = Math.min(Stocks.minReserveMerchantHP1, (requestedHP1 - availableHP1));
-        const availableMP0 = this.getInventoryStock("mpot0");
+        const availableMP0 = tool.getInventoryStock("mpot0");
         const requestedMP0 = this.getTotalRequested("mpot0");
         let missingMP0 = Math.min(Stocks.minReserveMerchantMP0, (requestedMP0 - availableMP0));
-        const availableMP1 = this.getInventoryStock("mpot1");
+        const availableMP1 = tool.getInventoryStock("mpot1");
         const requestedMP1 = this.getTotalRequested("mpot1");
         let missingMP1 = Math.min(Stocks.minReserveMerchantMP1, (requestedMP1 - availableMP1));
 
-        const availableUpgrade = this.getInventoryStock("scroll0");
-        const availableCompound = this.getInventoryStock("cscroll0");
+        const availableUpgrade = tool.getInventoryStock("scroll0");
+        const availableCompound = tool.getInventoryStock("cscroll0");
 
         let amountToBuyUpgrade = Math.max(Stocks.minReserveMerchantUpgrade0 * 1.2 - availableUpgrade, 0);
         let amountToBuyCompound = Math.max(Stocks.minReserveMerchantCombound0 * 1.2 - availableCompound, 0);
@@ -186,20 +188,6 @@ export class ShoppingHandler {
     //         return 0;
     //     }
     // }
-
-    public getInventoryStock(itemName: string): number {
-        let candidate = character.items.find((item) => {
-            // noinspection PointlessBooleanExpressionJS
-            return !!(item && (item.name === itemName));
-        });
-        let availableInInventory = 0;
-        if (candidate) {
-            availableInInventory = candidate.q || 0;
-        }
-
-        return availableInInventory;
-
-    }
 
     public startRestockMonitoring() {
         setInterval(() => {

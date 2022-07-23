@@ -1,4 +1,20 @@
+import {Tools} from "../../tools";
+
 export class EquipmentHandler {
+    private tool = new Tools();
+    private itemsToUpgrade: string[] = ['hpbelt']
+
+    public async getNumberOfPossibleUpgradeActions(): Promise<number> {
+        let numberOfActions = 0;
+        let level = 0;
+        for (let itemName of this.itemsToUpgrade) {
+            const cnt = this.tool.getInventoryStockWithSpecialLevel(itemName, level);
+            console.log(itemName + ':' + cnt);
+            numberOfActions += cnt % 3;
+        }
+        return numberOfActions;
+    }
+
     public async startBeNotNaked(): Promise<void> {
         setInterval(async () => {
             for (const slot of await this.findEmptySlots()) {

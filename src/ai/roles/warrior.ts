@@ -17,8 +17,12 @@ export class Warrior extends Fighter {
                 }
             );
         }, 10_000)
-
     }
+
+    async performRoleSpecificTasks(): Promise<boolean> {
+        return false;
+    }
+
 }
 
 
