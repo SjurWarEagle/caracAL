@@ -42,8 +42,10 @@ export class Priest extends Fighter {
                 // console.log('target "' + name + '" not in range');
                 continue;
             }
-            if ((target?.hp || 0) >= (target?.max_hp || 0)) {
+            if ((target?.max_hp || 0) - (target?.hp || 0) <= character.attack * 0.5) {
                 //healthy enough
+                //not at full health
+                //and not if only half the potential is used, better to heal someone else if needed
                 continue;
             }
             if (simple_distance(character, target) <= 200) {

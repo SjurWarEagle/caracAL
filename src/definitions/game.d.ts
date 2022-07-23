@@ -86,6 +86,7 @@ export interface Entity {
     range?: number;
     hp: number;
     cc: number;
+    map: string;
     speed: number;
     resistance: number;
     armor: number;

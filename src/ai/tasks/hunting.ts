@@ -1,5 +1,5 @@
 import {ACTIVE_HUNT_INFO, ACTIVE_HUNT_MISSING, getCharacter} from "./common";
-import config, {partyMerchant} from "../config";
+import {partyMerchant} from "../config";
 import {BroadCastHandler} from "./broadcasts";
 
 // @ts-ignore
@@ -151,66 +151,4 @@ export class HuntingHandler {
         return false;
     }
 
-    public reportHunts() {
-        let report = "\n";
-        report
-            += "+ " + "-".padEnd(10, "-")
-            + " + " + "-".padEnd(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " +\n";
-        report
-            += "| " + "Char".padEnd(10)
-            + " | " + "Target".padEnd(10)
-            + " | " + "Cnt".padEnd(10)
-            + " | " + "Duration".padEnd(10)
-            + " |\n";
-        report
-            += "+ " + "-".padEnd(10, "-")
-            + " + " + "-".padEnd(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " +\n";
-
-        config.myHelpers.forEach((name) => {
-            const hunt = rememberedHunts[name];
-            if (!hunt) {
-                report
-                    += "| " + name.padEnd(10)
-                    + " | " + "<none>".padEnd(10)
-                    + " | " + "<none>".padStart(10)
-                    + " | " + "<none>".padStart(10)
-                    + " |\n";
-                return;
-            }
-
-            report
-                += "| " + name.padEnd(10)
-                + " | " + hunt.id.padEnd(10)
-                + " | " + ("" + hunt.c).padStart(10)
-                + " | " + (this.msToTime(hunt.ms)).padStart(10)
-                + " |\n";
-        });
-        report
-            += "+ " + "-".padEnd(10, "-")
-            + " + " + "-".padEnd(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " + " + "-".padStart(10, "-")
-            + " +\n";
-
-        console.log(report);
-    }
-
-    private msToTime(duration: number) {
-        // let milliseconds = Math.floor((duration % 1000) / 100);
-        let seconds: string | number = Math.floor((duration / 1000) % 60);
-        let minutes: string | number = Math.floor((duration / (1000 * 60)) % 60);
-        let hours: string | number = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-        return hours + ":" + minutes + ":" + seconds;
-    }
 }

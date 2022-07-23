@@ -64,9 +64,6 @@ export class Merchant {
         await this.stockMonitor.startCollectingRequests();
         this.broadcastHandler.listenForLastLeaderPosition();
         this.huntingHandler.receiveBroadCastHunts();
-        setInterval(() => {
-            this.huntingHandler.reportHunts();
-        }, 60_000);
 
         setInterval(async () => {
             // await new Tools().sortBank();

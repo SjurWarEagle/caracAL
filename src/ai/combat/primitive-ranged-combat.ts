@@ -20,15 +20,12 @@ export class PrimitiveRangedCombat extends AbstractCombat {
         let target = await this.getNewTarget(mon_type);
         let minDistance;
         if (target) {
-            minDistance = Math.min((target.range||1_000) * 2, character.range * 0.75);
+            minDistance = Math.max((target.range||1_000) * 2, character.range * 0.75);
         } else {
             minDistance = character.range * 0.75;
         }
-        minDistance = Math.max(minDistance, character.range * 0.5);
 
-
-        const maxDistance = character.range * 0.98;
-
+        const maxDistance = character.range * 0.99;
 
         await this.drawHelperCircle(character, target!, minDistance, maxDistance);
         if (target) {

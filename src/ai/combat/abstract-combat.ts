@@ -32,12 +32,26 @@ export abstract class AbstractCombat {
         }
 
         let commonTargetId = localStorage.getItem('commonTargetId');
+        let commonTargetMap = localStorage.getItem('commonTargetX') || 'main';
+        let commonTargetX = +(localStorage.getItem('commonTargetX') || 0);
+        let commonTargetY = +(localStorage.getItem('commonTargetY') || 0);
         if (this.targetInformation.allAttackSameTarget && commonTargetId) {
             // console.log('⚔ using common existing target');
             this.target = get_monster(commonTargetId);
             if (!this.target) {
-                //target was killed?
-                localStorage.removeItem('commonTargetId');
+                let me = getCharacter(character.name)!;
+                let dX = Math.abs((commonTargetX || 0) - me.x);
+                let dY = Math.abs((commonTargetY || 0) - me.y);
+                let dist = Math.sqrt(dX * dX + dY * dY);
+                if (dist > 300 && !smart.moving) {
+                    smart_move({map: commonTargetMap, x: commonTargetX, y: commonTargetY});
+                } else if (dist <= 300) {
+                    localStorage.removeItem('commonTargetId');
+                    localStorage.removeItem('commonTargetMap');
+                    localStorage.removeItem('commonTargetX');
+                    localStorage.removeItem('commonTargetY');
+                }
+
                 return undefined;
             }
         } else {
@@ -65,6 +79,9 @@ export abstract class AbstractCombat {
             if (this.target && this.targetInformation.allAttackSameTarget && !commonTargetId) {
                 // console.log('⚔ saving new common target');
                 localStorage.setItem('commonTargetId', this.target.id!);
+                localStorage.setItem('commonTargetX', ''+this.target.x);
+                localStorage.setItem('commonTargetY', ''+this.target.y);
+                localStorage.setItem('commonTargetMap', this.target.map);
             }
         }
         return this.target;

@@ -221,13 +221,14 @@ export function determineMonsterTypeMatchingLevel(): TargetInformation {
     }
 
     //manual overrride
-    // rc.allAttackSameTarget = true;
-    rc.allAttackSameTarget = false;
+    rc.allAttackSameTarget = true;
+    // rc.allAttackSameTarget = false;
     // rc.mon_type = "spider";
-    rc.mon_type = "bee";
+    // rc.mon_type = "bee";
     // rc.mon_type = "goo";
     // rc.mon_type = "armadillo";
     // rc.mon_type = "osnake";
+    rc.mon_type = "snake";
     // rc.mon_type = "tortoise";
     // rc.mon_type = "phoenix";
 
