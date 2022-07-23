@@ -15,6 +15,8 @@ export class HuntingHandler {
     public whiteListHuntingTargets: string[] = ["goo", 'bee', 'chicken'];
 
     // frog - only if ranges char, evade is too much
+    // 'snake','croc' - are at high level a bit too hard :(
+    // 'tortoise' hitting too hard
 
     constructor(private broadcasthandler: BroadCastHandler) {
     }

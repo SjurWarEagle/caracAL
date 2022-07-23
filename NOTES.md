@@ -1,11 +1,10 @@
-= Notes
-== Purpose
+# Notes
+## Purpose
 Just a random collection of ideas and things I found out. To not have to keep everything in mind.
 
-== Logging
+## Logging
 
-
-== Tracktrix
+## Tracktrix
 
 ```js
 const get_monster_count = (mtype) => {
@@ -23,3 +22,9 @@ const get_monster_count = (mtype) => {
 _note_ very costly!
 
 there also is data in `parent.tracker` not sure if above code is needed for updating it.
+
+
+## Disconnect ##
+```js
+parent.api_call("disconnect_character", {name: "Schnapper"})
+```

@@ -32,6 +32,28 @@ export class Merchant {
     protected combatStrategy: AbstractCombat = new JustRunAway(this.huntingHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
+    private async needDepositToBank(): Promise<boolean> {
+        if (character.gold < 1_000_000) {
+            return false;
+        }
+        if (character.gold < 1_000_000 && character.bank) {
+            set_message('leave bank')
+            await smart_move("main")
+            return false;
+        }
+        if (character.bank) {
+            await this.depositStuffIntoBank();
+            return true;
+        } else {
+            set_message('to bank')
+            await smart_move("bank", async () => {
+                await this.depositStuffIntoBank();
+            });
+            return true;
+        }
+    }
+
+
     async start() {
         await this.statisticDistributor.startPublishingGlobalData();
         await this.statisticDistributor.startPublishingCharSpecificData();
@@ -46,9 +68,10 @@ export class Merchant {
             this.huntingHandler.reportHunts();
         }, 60_000);
 
-        setInterval(() => {
-            Tools.sortInventory();
-        }, 60_000);
+        setInterval(async () => {
+            // await new Tools().sortBank();
+            await new Tools().sortInventory();
+        }, 1_000);
 
         startRevive();
         startBuffing();
@@ -65,27 +88,6 @@ export class Merchant {
             // log("currentActivityMerchant:" + this.currentActivity);
         }, 1_000);
 
-
-        async function needDepositToBank() {
-            if (character.gold < 1_000_000) {
-                return false;
-            }
-            if (character.gold < 1_000_000 && character.bank) {
-                set_message('leave bank')
-                await smart_move("main")
-                return false;
-            }
-            if (character.bank) {
-                await bank_deposit(500_000);
-                return true;
-            } else {
-                set_message('to bank')
-                await smart_move("bank", async () => {
-                    await bank_deposit(500_000);
-                });
-                return true;
-            }
-        }
 
         setInterval(async () => {
 
@@ -119,7 +121,7 @@ export class Merchant {
                     log(this.currentActivity + " !== \"COMBAT\" doing nothing");
                     return;
                 }
-                if (await needDepositToBank()) {
+                if (await this.needDepositToBank()) {
                     await set_message("bank ops")
                     return;
                 }
@@ -127,6 +129,12 @@ export class Merchant {
                 await this.combatStrategy.attack();
             }
         }, 200);
+
+    }
+
+    private async depositStuffIntoBank(): Promise<void> {
+        await bank_deposit(character.gold - 500_000);
+        await this.statisticDistributor.publishBankContent();
 
     }
 }

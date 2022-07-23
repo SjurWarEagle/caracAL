@@ -42,6 +42,10 @@ export class StatisticDistributor {
         }, 300_000)
     }
 
+    public async publishBankContent() {
+        await this.postData('http://localhost:3700/api/bank', character.bank);
+    }
+
     private async publishCharAvgData() {
         await this.postData('http://localhost:3700/api/charAvg', this.charAvgCollector.getAndReset());
     }

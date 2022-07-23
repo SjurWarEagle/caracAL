@@ -178,7 +178,7 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
         let dX = Math.abs(broadcast.lastLeaderPosition.x - me.x);
         let dY = Math.abs(broadcast.lastLeaderPosition.y - me.y);
         let dist = Math.sqrt(dX * dX + dY * dY);
-        if (character.map === broadcast.lastLeaderPosition.map && dist > 150) {
+        if (character.map === broadcast.lastLeaderPosition.map && dist > 250) {
             smart_move({
                 map: broadcast.lastLeaderPosition.map,
                 x: broadcast.lastLeaderPosition.x + 5,

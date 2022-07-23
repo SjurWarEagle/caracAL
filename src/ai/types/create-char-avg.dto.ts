@@ -12,7 +12,8 @@ export class CreateCharAvgDto {
     public cntMissed: number = 0;
     public cntHit: number = 0;
     public cntKill: number = 0;
+    public deltaGold: number = 0;
+    public deltaXP: number = 0;
     public damageDone: number = 0;
-
-
+    public damageTaken: number = 0;
 }

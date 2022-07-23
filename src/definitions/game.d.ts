@@ -8,7 +8,7 @@ interface ISpellCasting {
 
 export interface ICharacter extends Entity {
     slots: { [T in keyof string]: ItemInfo };
-    bank?: boolean;
+    bank?: { [T:string]: ItemInfo };
     c: ISpellCasting;
     ping?: number;
     party?: string;
@@ -60,12 +60,13 @@ export interface IDestinationSmart {
     return?: boolean;
 }
 
-export interface ItemInfo {
+export class ItemInfo {
     level?: number;
     q?: number;
     name: string;
     type?: string;
     g?: number;
+    oldPosition?: number;
 }
 
 export interface BuffInfo {
@@ -185,6 +186,8 @@ declare global {
 
     function can_use(skill: SkillName): boolean;
 
+    function bank_retrieve(pack:string,pack_num:number,inventorySlot: number): void;
+    function bank_store(inventorySlot: number,pack:string,pack_num:number): void;
     function swap(a: number, b: number): void;
 
     function can_attack(entity: Entity): boolean;
