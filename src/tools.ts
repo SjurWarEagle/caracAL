@@ -4,25 +4,34 @@ import {sortBy} from "lodash";
 export class Tools {
 
     public getInventoryStockWithSpecialLevel(itemName: string, level: number): number {
-        let candidate = character.items.find((item) => {
+        let candidates = character.items.filter((item) => {
             return !!(item && (item.name === itemName && (item.level || 0) === level));
         });
+        if (!candidates) {
+            return 0;
+        }
+
         let availableInInventory = 0;
-        if (candidate) {
-            availableInInventory = candidate.q || 0;
+        for (let candidateElement of candidates) {
+            if (candidateElement) {
+                availableInInventory += candidateElement.q || 1;
+            }
         }
 
         return availableInInventory;
     }
 
     public getInventoryStock(itemName: string): number {
-        let candidate = character.items.find((item) => {
+        let candidates = character.items.filter((item) => {
             // noinspection PointlessBooleanExpressionJS
-            return !!(item && (item.name === itemName));
+            return (item && (item.name === itemName));
         });
         let availableInInventory = 0;
-        if (candidate) {
-            availableInInventory = candidate.q || 0;
+        for (let candidate of candidates) {
+
+            if (candidate) {
+                availableInInventory += candidate.q || 1;
+            }
         }
 
         return availableInInventory;
@@ -223,6 +232,28 @@ export class Tools {
         for (let moveOrderToDelete of toRemove) {
             movements.splice(movements.indexOf(moveOrderToDelete), 1);
         }
+    }
+
+    async getInventorySlotsForItems(itemName: string): Promise<number[]> {
+        const rc: number[] = [];
+        character.items.forEach((item, index) => {
+            if (item && (item.name === itemName)) {
+                rc.push(index);
+            }
+        });
+
+        return rc;
+    }
+
+    async getInventorySlotsForItemsWithSpecialLevel(itemName: string, level: number): Promise<number[]> {
+        const rc: number[] = [];
+        character.items.forEach((item, index) => {
+            if (item && (item.name === itemName && (item.level || 0) === level)) {
+                rc.push(index);
+            }
+        });
+
+        return rc;
     }
 }
 

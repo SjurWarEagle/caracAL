@@ -6,10 +6,15 @@ interface ISpellCasting {
     town?: { "ms": number };
 }
 
+interface ISkillUsage {
+    compound?: { "ms": number };
+}
+
 export interface ICharacter extends Entity {
     slots: { [T in keyof string]: ItemInfo };
-    bank?: { [T:string]: ItemInfo };
+    bank?: { [T: string]: ItemInfo };
     c: ISpellCasting;
+    q: ISkillUsage;
     ping?: number;
     party?: string;
     name: string;
@@ -187,8 +192,18 @@ declare global {
 
     function can_use(skill: SkillName): boolean;
 
-    function bank_retrieve(pack:string,pack_num:number,inventorySlot: number): void;
-    function bank_store(inventorySlot: number,pack:string,pack_num:number): void;
+    /**
+     * sell an item from character.items by it's order - 0 to N-1
+     */
+    function sell(idx:number,quantity:number):void;
+
+    //async
+    function compound(slot1: number, slot2: number, slot3: number, scroll: number, outputSlot?: number): Promise<any>;
+
+    function bank_retrieve(pack: string, pack_num: number, inventorySlot: number): void;
+
+    function bank_store(inventorySlot: number, pack: string, pack_num: number): void;
+
     function swap(a: number, b: number): void;
 
     function can_attack(entity: Entity): boolean;
@@ -218,7 +233,8 @@ declare global {
     function game_log(msg: string, color?: string): void;
 
     function leave_party(): void;
-    function get_monster(id:string): Entity|undefined;
+
+    function get_monster(id: string): Entity | undefined;
 
     function accept_party_invite(from: string): void;
 

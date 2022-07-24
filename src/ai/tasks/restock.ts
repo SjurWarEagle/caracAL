@@ -21,7 +21,7 @@ export class StockMonitor {
                 let requester = get_player(requesterName);
                 if (!requester) {
                     // not close by
-                    console.log('requester not close by');
+                    // console.log('requester not close by');
                     return;
                 }
                 value.forEach((cnt, itemName) => {
