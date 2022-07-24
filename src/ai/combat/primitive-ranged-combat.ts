@@ -1,13 +1,13 @@
 import {Entity, ICharacter} from "../../definitions/game";
-import {TargetInformation} from "./target-information";
 import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 import {AbstractCombat} from "./abstract-combat";
 import {HuntingHandler} from "../tasks/hunting";
+import {BroadCastHandler} from "../tasks/broadcasts";
 
 export class PrimitiveRangedCombat extends AbstractCombat {
 
-    constructor(protected huntingHandler: HuntingHandler) {
-        super(huntingHandler);
+    constructor(protected huntingHandler: HuntingHandler, protected broadcastHandler: BroadCastHandler) {
+        super(huntingHandler, broadcastHandler);
         this.targetInformation = determineMonsterTypeMatchingLevel();
     }
 
@@ -15,17 +15,16 @@ export class PrimitiveRangedCombat extends AbstractCombat {
      * primitive attack, just hit when ready
      */
     public async attack(): Promise<void> {
-        const mon_type: string = this.targetInformation!.mon_type;
 
-        let target = await this.getNewTarget(mon_type);
+        let target = await this.getTargetByTargetInfo();
         let minDistance;
         if (target) {
-            minDistance = Math.max((target.range||1_000) * 2, character.range * 0.75);
+            minDistance = Math.max((target.range||50) * 2, character.range * 0.5);
         } else {
             minDistance = character.range * 0.75;
         }
 
-        const maxDistance = character.range * 0.99;
+        const maxDistance = character.range * 0.90;
 
         await this.drawHelperCircle(character, target!, minDistance, maxDistance);
         if (target) {
@@ -57,14 +56,7 @@ export class PrimitiveRangedCombat extends AbstractCombat {
                     }
                 }
             }
-        } else if (!is_moving(character)) {
-            this.moveToNextMonster(mon_type);
         }
-
-    }
-
-    private moveToNextMonster(mon_type: string) {
-        smart_move(mon_type);
     }
 
     private async mustIncreaseDistance(minDistance: number, target: Entity): Promise<boolean> {
@@ -89,6 +81,8 @@ export class PrimitiveRangedCombat extends AbstractCombat {
     }
 
     private async drawHelperCircle(character: ICharacter, target: Entity, minDistance: number, maxDistance: number) {
+        // console.log('drawHelperCircle');
+        // console.log(target);
         if (parent.caracAL) {
             //not needed if no ui
             return;
@@ -142,10 +136,6 @@ export class PrimitiveRangedCombat extends AbstractCombat {
             y: meY + y
         };
 
-    }
-
-    public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
-        this.targetInformation = targetInformation;
     }
 
 }

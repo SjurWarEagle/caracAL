@@ -23,7 +23,7 @@ export abstract class Fighter {
     protected broadcastHandler = new BroadCastHandler();
     protected charAvgCollector: CharAvgCollector = new CharAvgCollector();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
-    protected combatStrategy: AbstractCombat = new BasicCombat(this.huntingHandler);
+    protected combatStrategy: AbstractCombat = new BasicCombat(this.huntingHandler, this.broadcastHandler);
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
     protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
@@ -34,8 +34,8 @@ export abstract class Fighter {
         this.statisticDistributor.startPublishingCharSpecificData();
         this.statisticDistributor.startPublishingCharAvgData();
 
-        let broadcast = new BroadCastHandler();
-        broadcast.listenForLastLeaderPosition();
+        this.broadcastHandler.listenForLastLeaderPosition();
+        this.broadcastHandler.listenForTarget();
         this.huntingHandler.startBroadCastHunts();
 
         this.stockMonitor.startWatchingInventoryStock();
@@ -76,7 +76,7 @@ export abstract class Fighter {
             if (await this.huntingHandler.huntForQuest()) {
                 return;
             }
-            await walkToGroupLead(broadcast);
+            await walkToGroupLead(this.broadcastHandler);
             set_message('⚔')
 
 

@@ -1,5 +1,4 @@
 import {Entity} from "../../definitions/game";
-import {TargetInformation} from "./target-information";
 import {AbstractCombat} from "./abstract-combat";
 
 
@@ -70,7 +69,4 @@ export class JustRunAway extends AbstractCombat {
 
     }
 
-    public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
-        //no targeting, so nothing to remember
-    }
 }

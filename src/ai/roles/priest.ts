@@ -7,7 +7,7 @@ export class Priest extends Fighter {
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler);
+        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
     }
 
     public async startHealingTeam(): Promise<void> {
@@ -16,10 +16,32 @@ export class Priest extends Fighter {
         }, 10_000);
     }
 
-    /**
-     * @return if other actions shall be forbidden
-     */
-    async performRoleSpecificTasks(): Promise<boolean> {
+    async neededToCastGroupHeal(): Promise<boolean> {
+        if (is_on_cooldown('partyheal')) {
+            return false;
+        }
+        if (character.mp < 400) {
+            return false;
+        }
+
+        const allCharNames: string[] = [];
+        allCharNames.push(...config.myHelpers)
+        allCharNames.push(partyMerchant)
+        for (const name of allCharNames) {
+            // if (name === character.name) {
+            //     continue;
+            // }
+            const target = get_player(name);
+            if (((target?.hp || 1) / (target?.max_hp || 1)) <= 0.5) {
+                // heal the complete party if any member is < 50%
+                // idea is "emergency heal"
+                await use_skill('partyheal')
+            }
+        }
+        return false;
+    }
+
+    async neededToCastHeal(): Promise<boolean> {
         const allCharNames: string[] = [];
         allCharNames.push(...config.myHelpers)
         allCharNames.push(partyMerchant)
@@ -34,12 +56,16 @@ export class Priest extends Fighter {
             return true;
         }
         for (const name of allCharNames) {
-            if (name === character.name) {
-                continue;
-            }
+            // if (name === character.name) {
+            //     continue;
+            // }
             const target = get_player(name);
             if (!target) {
                 // console.log('target "' + name + '" not in range');
+                continue;
+            }
+            if (target.hp <= 0) {
+                //dead
                 continue;
             }
             if ((target?.max_hp || 0) - (target?.hp || 0) <= character.attack * 0.5) {
@@ -54,6 +80,20 @@ export class Priest extends Fighter {
                 this.lastHeal = Date.now();
                 await heal(target);
             }
+        }
+        return false;
+
+    }
+
+    /**
+     * @return if other actions shall be forbidden
+     */
+    async performRoleSpecificTasks(): Promise<boolean> {
+        if (await this.neededToCastHeal()) {
+            return true;
+        }
+        if (await this.neededToCastGroupHeal()) {
+            return true;
         }
         return false;
     }

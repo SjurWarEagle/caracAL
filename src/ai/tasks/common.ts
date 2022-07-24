@@ -33,12 +33,6 @@ export function startAcceptingInvites() {
 
 export function startTransferLootToMerchant(): void { // called by the inviter's name
     setInterval(function () {
-        // todo what is this for?
-        // const currentActivity = getValue("currentActivityMerchant") || getCurrentActivityMerchant();
-        // if (currentActivity === "SHOPPING") {
-        //   //already on the way
-        //   return;
-        // }
 
         let merchant = getCharacter(partyMerchant);
         if (!merchant) {
@@ -51,7 +45,6 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
 
         let amount = 100_000;
         if (character.gold >= amount) {
-            log("Sending " + amount + " gold to " + merchant.name);
             send_gold(merchant, amount);
         }
 
@@ -64,39 +57,33 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
                 continue;
             }
             let itemName = item.name;
-            // console.log(i,itemName,item.q)
             if (itemName === "mpot0") {
                 let amount = item.q || 0;
                 amount = Math.max(0, amount - Stocks.minCntMP0);
                 if (amount > 0) {
-                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             } else if (itemName === "hpot0") {
                 let amount = item.q || 0;
                 amount = Math.max(0, amount - Stocks.minCntHP0);
                 if (amount > 0) {
-                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             } else if (itemName === "mpot1") {
                 let amount = item.q || 0;
                 amount = Math.max(0, amount - Stocks.minCntMP1);
                 if (amount > 0) {
-                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             } else if (itemName === "hpot1") {
                 let amount = item.q || 0;
                 amount = Math.max(0, amount - Stocks.minCntHP1);
                 if (amount > 0) {
-                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             } else {
                 let amount = item.q || 1;
                 if (amount > 0) {
-                    log("Sending " + amount + " " + itemName + " to " + merchant.name);
                     send_item(merchant, i, amount);
                 }
             }
@@ -140,10 +127,6 @@ export function startRevive() {
 }
 
 export async function walkToGroupLead(broadcast: BroadCastHandler) {
-    if (character.rip) {
-        setTimeout(respawn, 15000);
-        return;
-    }
     if (is_moving(character)) {
         return;
     }
@@ -153,7 +136,7 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
     }
     set_message('to leader')
     let lastDistanceCheckToLeader = +getValue("lastDistanceCheckToLeader-" + character.name);
-    if (Date.now() - lastDistanceCheckToLeader < 10_000) {
+    if (Date.now() - lastDistanceCheckToLeader < 1_000) {
         // reduce the number of checks, the distance will not change every ms.
         // log("not doing distance check")
         return;
@@ -221,16 +204,17 @@ export function determineMonsterTypeMatchingLevel(): TargetInformation {
     }
 
     //manual overrride
-    rc.allAttackSameTarget = true;
-    // rc.allAttackSameTarget = false;
+    // rc.allAttackSameTarget = true;
+    rc.allAttackSameTarget = false;
+    // rc.mon_type = "phoenix";
     // rc.mon_type = "spider";
-    // rc.mon_type = "bee";
+    rc.mon_type = "bee";
     // rc.mon_type = "goo";
     // rc.mon_type = "armadillo";
     // rc.mon_type = "osnake";
-    rc.mon_type = "snake";
+    // rc.mon_type = "snake";
     // rc.mon_type = "tortoise";
-    // rc.mon_type = "phoenix";
+    // rc.mon_type = "minimush";
 
     return rc;
 

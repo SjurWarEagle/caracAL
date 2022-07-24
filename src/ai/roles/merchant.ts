@@ -29,7 +29,7 @@ export class Merchant {
     protected shoppingHandler = new ShoppingHandler();
     protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
-    protected combatStrategy: AbstractCombat = new JustRunAway(this.huntingHandler);
+    protected combatStrategy: AbstractCombat = new JustRunAway(this.huntingHandler, this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
     private async needDepositToBank(): Promise<boolean> {

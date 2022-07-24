@@ -1,24 +1,19 @@
-import {TargetInformation} from "./target-information";
 import {determineMonsterTypeMatchingLevel} from "../tasks/common";
 import {AbstractCombat} from "./abstract-combat";
 import {HuntingHandler} from "../tasks/hunting";
+import {BroadCastHandler} from "../tasks/broadcasts";
 
 export class BasicCombat extends AbstractCombat {
 
-    constructor(protected huntingHandler: HuntingHandler) {
-        super(huntingHandler);
+    constructor(protected huntingHandler: HuntingHandler, broadcastHandler: BroadCastHandler) {
+        super(huntingHandler, broadcastHandler);
         this.targetInformation = determineMonsterTypeMatchingLevel();
-    }
-
-    public async setTargetInfo(targetInformation: TargetInformation): Promise<void> {
-        this.targetInformation = targetInformation;
     }
 
     /**
      * primitive attack, just hit when ready
      */
     public async attack(): Promise<void> {
-        const mon_type: string = this.targetInformation!.mon_type;
 
         if (get_targeted_monster() !== this.target) {
             //is target still the targeted entity?
@@ -28,7 +23,7 @@ export class BasicCombat extends AbstractCombat {
 
         // no target? then get one
         if (!this.target) {
-            this.target = await this.getNewTarget(mon_type);
+            this.target = await this.getTargetByTargetInfo();
         }
 
         if (this.target) {
@@ -50,9 +45,10 @@ export class BasicCombat extends AbstractCombat {
                     }
                 }
             }
-        } else if (!is_moving(character)) {
-            smart_move(mon_type);
         }
+        // } else if (!is_moving(character)) {
+        //     smart_move(mon_type);
+        // }
 
     }
 

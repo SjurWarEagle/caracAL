@@ -5,7 +5,7 @@ export class Ranger extends Fighter {
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler);
+        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
     }
 
     async performRoleSpecificTasks(): Promise<boolean> {

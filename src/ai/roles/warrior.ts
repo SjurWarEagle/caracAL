@@ -11,12 +11,12 @@ export class Warrior extends Fighter {
         setInterval(() => {
             this.broadcastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_LEADER_POSITION,
                 {
-                    map:character.map,
+                    map: character.map,
                     x: character.real_x,
                     y: character.real_y
                 }
             );
-        }, 10_000)
+        }, 1_000)
     }
 
     async performRoleSpecificTasks(): Promise<boolean> {

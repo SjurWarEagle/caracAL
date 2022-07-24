@@ -19,24 +19,17 @@ export abstract class AbstractCombat {
                 protected broadCastHandler: BroadCastHandler) {
     }
 
-    protected async getTargetByTargetInfo(): Promise<Entity | undefined> {
-        let mon_type;
-        if (this.targetInformation?.mon_type) {
-            mon_type = this.targetInformation?.mon_type;
-        } else {
-            mon_type = 'bee';
-        }
-
+    protected async getNewTarget(mon_type: string): Promise<Entity | undefined> {
+        // console.log(character.name + ': this.targetInformation=' + this.targetInformation);
         if (!this.targetInformation) {
             return;
         }
-        // console.log('looking for target with ' + JSON.stringify(this.targetInformation));
 
-        let me = getCharacter(character.name)!;
+        //override type if hunt is active
+        let me = getCharacter(character.name);
         // @ts-ignore
         const hunt = me.s["monsterhunt"];
         if ((hunt.c > 0) && this.huntingHandler.whiteListHuntingTargets.indexOf(hunt.id) !== -1) {
-            //override type if hunt is active
             set_message('🏹');
             mon_type = hunt.id;
         } else {
@@ -46,12 +39,31 @@ export abstract class AbstractCombat {
         // console.log(character.name + ': commonTarget?.id=' + this.broadCastHandler.commonTarget?.id);
         if (this.targetInformation.allAttackSameTarget && this.broadCastHandler.commonTarget?.id) {
             return this.getCommonTarget();
-        } else if (this.targetInformation.allAttackSameTarget && !(this.broadCastHandler.commonTarget?.id)) {
-            await this.findNewCommonTarget(mon_type);
         } else {
-            await this.findNewSingleTarget(mon_type)
-        }
+            if (this.targetInformation.allAttackSameTarget) {
+                await this.findNewCommonTarget(mon_type);
+            } else {
+                await this.findNewSingleTarget(mon_type)
+            }
+            if (this.target
+                && this.targetInformation.allAttackSameTarget
+                // && !this.broadCastHandler.commonTarget?.id
+                && character.name === partyLeader) {
+                // new common targets are only set by the leader to avoid clustering of the team over the map
+                // and having them run fom a to b to a to b.
 
+                const data: CommonTarget = {
+                        id: this.target.id,
+                        x: +(this.target.real_x || this.target.x),
+                        y: +(this.target.real_y || this.target.y),
+                        map: this.target.map
+                    }
+                ;
+                console.log(character.name + ': ⚔ saving new common target');
+                // console.log('to:', JSON.stringify(data));
+                this.broadCastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_NEW_TARGET, data);
+            }
+        }
         return this.target;
     }
 
@@ -85,47 +97,23 @@ export abstract class AbstractCombat {
 
             return undefined;
         }
-        return this.target;
+
     }
 
-    private async findNewCommonTarget(mon_type: string) {
-        if (character.name !== partyLeader) {
-            // new common targets are only set by the leader to avoid clustering of the team over the map
-            // and having them run fom a to b to a to b.
-            return;
-        }
-
+    private async findNewCommonTarget(monType: string) {
         console.log(character.name + ': no common target, but shall attack one. so need to find new one.');
-        this.target = get_nearest_monster({type: mon_type, target: partyMerchant});
+        this.target = get_nearest_monster({type: monType, target: partyMerchant});
         if (!this.target) {
-            this.target = get_nearest_monster({type: mon_type});
+            this.target = get_nearest_monster({type: monType});
         }
         for (let helper of config.myHelpers) {
             // check if there is a monster, targeting the team
             if (!this.target) {
-                this.target = get_nearest_monster({type: mon_type, target: helper});
+                this.target = get_nearest_monster({type: monType, target: helper});
             }
         }
-        if (!this.target && (!is_moving(character))) {
-            // if no target was found, move in the general direction of monster type
-            await smart_move(mon_type);
-        }
-        if (this.target
-            && this.targetInformation!.allAttackSameTarget
-        ) {
-            const data: CommonTarget = {
-                    id: this.target.id,
-                    x: +(this.target.real_x || this.target.x),
-                    y: +(this.target.real_y || this.target.y),
-                    map: this.target.map
-                }
-            ;
-            this.broadCastHandler.commonTarget = data;
-            console.log(character.name + ': ⚔ saving new common target');
-            console.log('to:', JSON.stringify(data));
-            this.broadCastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_NEW_TARGET, data);
+        // console.log(this.target);
 
-        }
     }
 
     private async findNewSingleTarget(mon_type: string) {
@@ -145,7 +133,7 @@ export abstract class AbstractCombat {
         }
         if (!this.target && !smart.moving) {
             console.log(character.name + ': moving to general monster area for', mon_type);
-            await smart_move(mon_type)
+            smart_move(mon_type)
         }
 
     }

@@ -18,7 +18,6 @@ export class StockMonitor {
             }
 
             this.openRequests.forEach((value, requesterName) => {
-                // console.log('trying to distribute', requesterName, value);
                 let requester = get_player(requesterName);
                 if (!requester) {
                     // not close by
@@ -32,10 +31,7 @@ export class StockMonitor {
                     const target = get_player(requesterName);
                     //check target range
                     const slot = getInventorySlotOfItem(itemName);
-                    // console.log(target, !!target);
-                    // console.log(slot, !!slot);
                     if (target && slot !== undefined) {
-                        console.log('Sending ' + cnt + 'x ' + itemName + ' from slot ' + slot + ' to ' + target.name);
                         send_item(target, slot, cnt);
                         // remove supply-request because it's done now
                         this.openRequests.get(requesterName)!.delete(itemName);
@@ -45,7 +41,6 @@ export class StockMonitor {
                     }
                 })
             });
-            // console.log(this.openRequests);
         }, 10_000);
     }
 
@@ -60,7 +55,6 @@ export class StockMonitor {
                 this.openRequests.set(data.requesterName, new Map())
             }
             this.openRequests.get(data.requesterName)!.set(data.itemName, data.cnt);
-            // console.log(this.openRequests);
         });
     }
 
