@@ -102,7 +102,7 @@ export class Merchant {
             }
 
 
-            console.log('sell:'+await this.equipmentHandler.getNumberOfStuffToSell());
+            // console.log('sell:'+await this.equipmentHandler.getNumberOfStuffToSell());
             if ((await this.equipmentHandler.getNumberOfStuffToSell()) >= 5) {
                 // console.log('going to combine');
                 set_message('💲');
