@@ -18,11 +18,11 @@ export class PrimitiveRangedCombat extends AbstractCombat {
 
         let target = await this.getTargetByTargetInfo();
         let minDistance;
-        if (target) {
-            minDistance = Math.max((target.range||50) * 2, character.range * 0.5);
-        } else {
-            minDistance = character.range * 0.75;
-        }
+        // if (target) {
+        minDistance = character.range * 0.6;
+        // } else {
+        //     minDistance = character.range * 0.75;
+        // }
 
         const maxDistance = character.range * 0.90;
 
@@ -33,7 +33,7 @@ export class PrimitiveRangedCombat extends AbstractCombat {
             if (await this.mustIncreaseDistance(minDistance, target)) {
                 //try shooting while running away
                 // return;
-                // console.log('mustIncreaseDistance=true');
+                console.log('mustIncreaseDistance=true');
             }
             if (is_on_cooldown("attack")) {
                 return;
@@ -48,7 +48,7 @@ export class PrimitiveRangedCombat extends AbstractCombat {
                 const newPosition = this.generateNewPosition(target);
                 const dist = simple_distance(target, character);
                 if (!is_moving(character)
-                    && dist > maxDistance) {
+                    && dist >= maxDistance) {
                     if (can_move_to(newPosition.x, newPosition.y)) {
                         await move((newPosition.x + character.real_x!) / 2, (newPosition.y + character.real_y!) / 2);
                     } else {
@@ -64,20 +64,13 @@ export class PrimitiveRangedCombat extends AbstractCombat {
             // console.log('no target');
             return false;
         }
-        if (simple_distance(character, target) > minDistance) {
-            // console.log('far enough away ',simple_distance(character, target),minDistance);
-            return false;
+        if (distance(character, target) < minDistance) {
+            // if (simple_distance(character, target) < minDistance) {
+            const newPosition = this.generateNewPosition(target)
+            move(newPosition.x, newPosition.y);
+            return true;
         }
-        const newPosition = this.generateNewPosition(target)
-        // if (can_move_to(newPosition.x, newPosition.y)) {
-        // moveTo(newPosition.x, newPosition.y);
-        move(newPosition.x, newPosition.y);
-        // console.log('moveTo('+newPosition.x+', '+newPosition.y+')');
-
-        // moveTo(newPosition.x, newPosition.y);
-        // }
-        return true;
-
+        return false;
     }
 
     private async drawHelperCircle(character: ICharacter, target: Entity, minDistance: number, maxDistance: number) {
@@ -92,10 +85,15 @@ export class PrimitiveRangedCombat extends AbstractCombat {
             return;
         }
         const newPosition = this.generateNewPosition(target);
-        draw_circle(character.real_x || character.x, character.real_y || character.y, minDistance, 2, 0xFF0000);
-        draw_circle(character.real_x || character.x, character.real_y || character.y, maxDistance, 2, 0x00FF00);
+        draw_circle(character.real_x || character.x, character.real_y || character.y, minDistance, 2, 0x00FF00);
+        draw_circle(character.real_x || character.x, character.real_y || character.y, maxDistance, 2, 0xFF0000);
 
-        draw_circle(newPosition.x, newPosition.y, 10, 4, 0x00FFFF);
+        if (target.range) {
+            draw_circle(target.real_x || target.x, target.real_y || target.y, target.range, 2, 0x0000FF);
+        }
+
+        draw_line(newPosition.x - 10, newPosition.y - 10, newPosition.x + 10, newPosition.y + 10, 2, 0x00FFFF);
+        draw_line(newPosition.x - 10, newPosition.y + 10, newPosition.x + 10, newPosition.y - 10, 2, 0x00FFFF);
 
         draw_circle(target.real_x || target.x, (target.real_y || target.y) - 6, 10, 4, 0x0000FF);
         draw_line(character.real_x || character.x

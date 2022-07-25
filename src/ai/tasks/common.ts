@@ -208,13 +208,13 @@ export function determineMonsterTypeMatchingLevel(): TargetInformation {
     rc.allAttackSameTarget = false;
     // rc.mon_type = "phoenix";
     // rc.mon_type = "spider";
-    rc.mon_type = "bee";
+    // rc.mon_type = "bee";
     // rc.mon_type = "goo";
     // rc.mon_type = "armadillo";
     // rc.mon_type = "osnake";
     // rc.mon_type = "snake";
     // rc.mon_type = "tortoise";
-    // rc.mon_type = "minimush";
+    rc.mon_type = "minimush";
 
     return rc;
 

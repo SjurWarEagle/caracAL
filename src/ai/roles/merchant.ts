@@ -113,9 +113,22 @@ export class Merchant {
                 }
                 return;
             }
+
+            if ((await this.equipmentHandler.getNumberOfStuffToUpgrade()) >= 2) {
+                // console.log('going to combine');
+                set_message('💲');
+                if (!smart.moving) {
+                    await smart_move('compound', async () => {
+                        await this.equipmentHandler.performRandomUpgrade();
+                        await this.equipmentHandler.sellStuff();
+                    });
+                }
+                return;
+            }
+
             if ((await this.equipmentHandler.getNumberOfPossibleUpgradeActions()) >= 2) {
                 // console.log('going to combine');
-                set_message('🔂');
+                set_message('⏫');
                 if (!smart.moving && !character.q.compound) {
                     // not moving and not combining
                     await smart_move('compound', async () => {

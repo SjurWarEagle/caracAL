@@ -2,8 +2,9 @@ import {Tools} from "../../tools";
 
 export class EquipmentHandler {
     private tool = new Tools();
-    private itemsToUpgrade: string[] = ['hpbelt', 'hpamulet', 'ringsj']
-    private itemsToSell: string[] = ['stinger','coat1','pants1']
+    private itemsToCombine: string[] = ['hpbelt', 'hpamulet', 'ringsj','dexamulet','intamulet','stramulet']
+    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1','wshoes']
+    private itemsToUpgrade: string[] = ['wcap']
 
     // private itemsToUpgrade: string[] = ['hpbelt']
 
@@ -12,12 +13,25 @@ export class EquipmentHandler {
         for (let itemName of this.itemsToSell) {
             const cnt = await this.tool.getInventorySlotsForItems(itemName);
             for (let slot of cnt) {
-                await sell(slot,1);
+                await sell(slot, 1);
             }
         }
         return total;
 
     }
+
+    public async getNumberOfStuffToUpgrade(): Promise<number> {
+        let total = 0;
+        for (let itemName of this.itemsToUpgrade) {
+            for (let level = 0; level < 5; level++) {
+                const cnt = this.tool.getInventoryStockWithSpecialLevel(itemName, level);
+                total += cnt;
+            }
+        }
+        return total;
+
+    }
+
     public async getNumberOfStuffToSell(): Promise<number> {
         let total = 0;
         for (let itemName of this.itemsToSell) {
@@ -32,8 +46,8 @@ export class EquipmentHandler {
         // console.log('getNumberOfPossibleUpgradeActions');
         let numberOfActions = 0;
         //level 0-1
-        for (let level = 0; level < 2; level++) {
-            for (let itemName of this.itemsToUpgrade) {
+        for (let level = 0; level < 3; level++) {
+            for (let itemName of this.itemsToCombine) {
                 const cnt = this.tool.getInventoryStockWithSpecialLevel(itemName, level);
                 // if (cnt >= 3) {
                 // console.log(character.name + ': I could upgrade ' + itemName + ' ' + Math.floor(cnt / 3) + 'x times (level ' + level + ')');
@@ -88,9 +102,27 @@ export class EquipmentHandler {
             ;
     }
 
-    async performRandomCompound(): Promise<void> {
-        for (let level = 0; level < 2; level++) {
+    async performRandomUpgrade(): Promise<void> {
+        for (let level = 0; level < 5; level++) {
             for (let itemName of this.itemsToUpgrade) {
+                const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(itemName, level);
+                for (let idx of cnt) {
+                    if (character.q.upgrade) {
+                        console.log("Already upgrading something!");
+                        return;
+                    }
+                    if (can_use('massproduction') && !is_on_cooldown('massproduction')) {
+                        await use_skill('massproduction');
+                    }
+                    await upgrade(idx, locate_item("scroll0"));
+                }
+            }
+        }
+    }
+
+    async performRandomCompound(): Promise<void> {
+        for (let level = 0; level < 3; level++) {
+            for (let itemName of this.itemsToCombine) {
                 const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(itemName, level);
                 if (cnt.length >= 3) {
                     if (character.q.compound) {

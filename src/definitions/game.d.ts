@@ -8,6 +8,7 @@ interface ISpellCasting {
 
 interface ISkillUsage {
     compound?: { "ms": number };
+    upgrade?: { "ms": number };
 }
 
 export interface ICharacter extends Entity {
@@ -224,6 +225,9 @@ declare global {
 
     function loot(): void;
 
+    /**
+     * Item is in the first slot[0], scroll is in the second[1]
+     */
     function upgrade(itemPos: number, scrollPos: number, offeringPos?: number): void;
 
     function load_code(foo: string): void;
@@ -316,6 +320,7 @@ export type SkillName =
     | "move_up"
     | "supershot"
     | "move_left"
+    | "massproduction"
     | "interact"
     | "phaseout"
     | "revive"
