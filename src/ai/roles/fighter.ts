@@ -16,6 +16,7 @@ import {EquipmentHandler} from "../tasks/equipment";
 import {BasicCombat} from "../combat/basic-combat";
 import {AbstractCombat} from "../combat/abstract-combat";
 import {CharAvgCollector} from "../tasks/char-avg-collector";
+import {TrackTrixCollector} from "../tasks/track-trix-collector";
 
 
 export abstract class Fighter {
@@ -26,7 +27,8 @@ export abstract class Fighter {
     protected combatStrategy: AbstractCombat = new BasicCombat(this.huntingHandler, this.broadcastHandler);
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
+    protected trackTrixCollector=new TrackTrixCollector;
+    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector(), this.trackTrixCollector);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
 

@@ -7,6 +7,7 @@ export class Warrior extends Fighter {
     constructor() {
         super();
         startPartyInvite();
+        this.statisticDistributor.startPublishingCharTracktrix();
 
         setInterval(() => {
             this.broadcastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_LEADER_POSITION,

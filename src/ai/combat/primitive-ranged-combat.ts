@@ -33,7 +33,7 @@ export class PrimitiveRangedCombat extends AbstractCombat {
             if (await this.mustIncreaseDistance(minDistance, target)) {
                 //try shooting while running away
                 // return;
-                console.log('mustIncreaseDistance=true');
+                // console.log('mustIncreaseDistance=true');
             }
             if (is_on_cooldown("attack")) {
                 return;

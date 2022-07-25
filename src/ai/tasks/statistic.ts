@@ -4,10 +4,11 @@
 // });
 
 import {CharAvgCollector} from "./char-avg-collector";
+import {TrackTrixCollector} from "./track-trix-collector";
 
 export class StatisticDistributor {
 
-    constructor(private charAvgCollector: CharAvgCollector) {
+    constructor(private charAvgCollector: CharAvgCollector,private trackTrixCollector: TrackTrixCollector) {
         charAvgCollector.startCollecting();
     }
 
@@ -19,6 +20,17 @@ export class StatisticDistributor {
     public async startPublishingCharSpecificData() {
         setInterval(() => {
             this.publishCharData();
+        }, 60_000)
+    }
+
+    /**
+     * publish collected avg-data
+     *
+     *  @ 5min
+     */
+    public async startPublishingCharTracktrix() {
+        setInterval(() => {
+            this.publishTracktrixData();
         }, 60_000)
     }
 
@@ -52,6 +64,10 @@ export class StatisticDistributor {
 
     private async publishCharData() {
         await this.postData('http://localhost:3700/api/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
+    }
+
+    private async publishTracktrixData() {
+        // await this.postData('http://localhost:3700/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(tracktrixData)))
     }
 
     private async publishGameInfoData() {

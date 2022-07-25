@@ -43,14 +43,9 @@ export class Priest extends Fighter {
 
     async neededToCastHeal(): Promise<boolean> {
         const allCharNames: string[] = [];
+        allCharNames.push(character.name)
         allCharNames.push(...config.myHelpers)
         allCharNames.push(partyMerchant)
-        // if (!can_use('heal')) {
-        //     return true;
-        // }
-        // if (Date.now() < this.lastHeal + 1_500) {
-        //     return true;
-        // }
         //heal and attack use same cooldown
         if (is_on_cooldown("attack")) {
             return true;

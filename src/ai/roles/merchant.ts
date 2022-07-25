@@ -18,6 +18,7 @@ import {ResourceGathering} from "../tasks/resource-gathering";
 import {JustRunAway} from "../combat/just-run-away";
 import {AbstractCombat} from "../combat/abstract-combat";
 import {CharAvgCollector} from "../tasks/char-avg-collector";
+import {TrackTrixCollector} from "../tasks/track-trix-collector";
 
 let lastCheckActivity = 0;
 
@@ -27,7 +28,8 @@ export class Merchant {
     protected resourceGathering = new ResourceGathering();
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector());
+    protected trackTrixCollector=new TrackTrixCollector;
+    protected statisticDistributor = new StatisticDistributor(new CharAvgCollector(),this.trackTrixCollector);
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
     protected combatStrategy: AbstractCombat = new JustRunAway(this.huntingHandler, this.broadcastHandler);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
@@ -116,7 +118,7 @@ export class Merchant {
 
             if ((await this.equipmentHandler.getNumberOfStuffToUpgrade()) >= 2) {
                 // console.log('going to combine');
-                set_message('💲');
+                set_message('⏫');
                 if (!smart.moving) {
                     await smart_move('compound', async () => {
                         await this.equipmentHandler.performRandomUpgrade();
