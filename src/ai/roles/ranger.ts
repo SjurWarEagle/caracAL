@@ -1,11 +1,12 @@
 import {Fighter} from "./fighter";
-import {PrimitiveRangedCombat} from "../combat/primitive-ranged-combat";
+import {Position, Wingman} from "../combat/wingman";
 
 export class Ranger extends Fighter {
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
+        this.combatStrategy = new Wingman(Position.SW, this.huntingHandler, this.broadcastHandler);
+        // this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
     }
 
     async performRoleSpecificTasks(): Promise<boolean> {

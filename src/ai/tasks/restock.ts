@@ -1,6 +1,6 @@
 import {partyMerchant, Stocks} from "../config";
 import {BroadCastHandler, SupplyOrder} from "./broadcasts";
-import {getCharacter, getInventorySlotOfItem} from "./common";
+import {getCharacter, getInventorySlotOfItem, getStock} from "./common";
 
 export class StockMonitor {
 
@@ -61,44 +61,27 @@ export class StockMonitor {
     public async startWatchingInventoryStock(): Promise<void> {
         setInterval(async () => {
 
-            let currentTracker = this.getStock('tracker')
+            let currentTracker = getStock('tracker')
             if (currentTracker < 1) {
                 await this.broadCastHandler.orderItems(partyMerchant, 1, 'tracker', character.name);
             }
-            let currentCntHP0 = this.getStock('hpot0')
+            let currentCntHP0 = getStock('hpot0')
             if (currentCntHP0 < Stocks.minCntHP0) {
                 await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP0 - currentCntHP0, 'hpot0', character.name);
             }
-            let currentCntHP1 = this.getStock('hpot1')
+            let currentCntHP1 = getStock('hpot1')
             if (currentCntHP1 < Stocks.minCntHP1) {
                 await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntHP1 - currentCntHP1, 'hpot1', character.name);
             }
-            let currentCntMP0 = this.getStock('mpot0')
+            let currentCntMP0 = getStock('mpot0')
             if (currentCntMP0 < Stocks.minCntMP0) {
                 await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP0 - currentCntMP0, 'mpot0', character.name);
             }
-            let currentCntMP1 = this.getStock('mpot1')
+            let currentCntMP1 = getStock('mpot1')
             if (currentCntMP1 < Stocks.minCntMP1) {
                 await this.broadCastHandler.orderItems(partyMerchant, Stocks.minCntMP1 - currentCntMP1, 'mpot1', character.name);
             }
         }, 10_000)
     }
-
-    //FIXME duplicate with shopping.ts
-    public getStock(itemName: string): number {
-        let candidate = character.items.find((item) => {
-            // noinspection PointlessBooleanExpressionJS
-            return !!(item && (item.name === itemName));
-        });
-
-        let availableMP = 0;
-        if (candidate) {
-            availableMP = candidate.q || 0;
-        }
-
-        return availableMP;
-
-    }
-
 }
 

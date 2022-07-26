@@ -105,7 +105,7 @@ export class Merchant {
 
 
             // console.log('sell:'+await this.equipmentHandler.getNumberOfStuffToSell());
-            if ((await this.equipmentHandler.getNumberOfStuffToSell()) >= 5) {
+            if ((await this.equipmentHandler.getNumberOfStuffToSell()) >= 2) {
                 // console.log('going to combine');
                 set_message('💲');
                 if (!smart.moving) {
@@ -116,7 +116,7 @@ export class Merchant {
                 return;
             }
 
-            if ((await this.equipmentHandler.getNumberOfStuffToUpgrade()) >= 2) {
+            if ((await this.equipmentHandler.getNumberOfStuffToUpgrade()) >= 1) {
                 // console.log('going to combine');
                 set_message('⏫');
                 if (!smart.moving) {
@@ -128,7 +128,7 @@ export class Merchant {
                 return;
             }
 
-            if ((await this.equipmentHandler.getNumberOfPossibleUpgradeActions()) >= 2) {
+            if ((await this.equipmentHandler.getNumberOfPossibleCompoundActions()) >= 1) {
                 // console.log('going to combine');
                 set_message('⏫');
                 if (!smart.moving && !character.q.compound) {

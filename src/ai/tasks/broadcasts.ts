@@ -22,6 +22,7 @@ export class BroadCastHandler {
 
     public listenForLastLeaderPosition(): void {
         character.on("cm", (msg) => {
+            // console.log('listenForLastLeaderPosition',msg);
             const data = JSON.parse(msg.message);
             if (data.type === BroadCastHandler.BROADCAST_LEADER_POSITION) {
                 this.lastLeaderPosition = data;

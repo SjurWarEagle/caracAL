@@ -101,6 +101,7 @@ export interface Entity {
     max_mp: number;
     attack: number;
     target: string;
+    damage: number;
     xp: number;
     y: number;
     x: number;

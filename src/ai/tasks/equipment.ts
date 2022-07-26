@@ -3,8 +3,8 @@ import {Tools} from "../../tools";
 export class EquipmentHandler {
     private tool = new Tools();
     private itemsToCombine: string[] = ['hpbelt', 'hpamulet', 'ringsj','dexamulet','intamulet','stramulet']
-    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1','wshoes']
-    private itemsToUpgrade: string[] = ['wcap']
+    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1','wshoes','mushroomstaff']
+    private itemsToUpgrade: string[] = ['wcap','slimestaff']
 
     // private itemsToUpgrade: string[] = ['hpbelt']
 
@@ -42,7 +42,7 @@ export class EquipmentHandler {
 
     }
 
-    public async getNumberOfPossibleUpgradeActions(): Promise<number> {
+    public async getNumberOfPossibleCompoundActions(): Promise<number> {
         // console.log('getNumberOfPossibleUpgradeActions');
         let numberOfActions = 0;
         //level 0-1

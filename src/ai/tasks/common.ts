@@ -53,11 +53,15 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
             if (!item) {
                 continue;
             }
-            if (item.name === 'tracker') {
-                continue;
-            }
             let itemName = item.name;
-            if (itemName === "mpot0") {
+
+            if (item.name === 'tracker') {
+                let currentTracker = getStock('tracker')
+                // console.log(character.name + ': tracker ' + currentTracker);
+                if (currentTracker > 1) {
+                    send_item(merchant, i, 1);
+                }
+            } else if (itemName === "mpot0") {
                 let amount = item.q || 0;
                 amount = Math.max(0, amount - Stocks.minCntMP0);
                 if (amount > 0) {
@@ -301,6 +305,24 @@ export function getCharacterPosition(name: string): { x: number, y: number } | u
     }
 }
 
+//FIXME duplicate with shopping.ts
+export function getStock(itemName: string): number {
+    let candidates = character.items.filter((item) => {
+        return !!(item && (item.name === itemName));
+    });
+
+    let available = 0;
+    if (candidates) {
+        for (let candidate of candidates) {
+            if (candidate) {
+                available = +(candidate.q || 1);
+            }
+        }
+    }
+    return available;
+}
+
+
 export function getInventorySlotOfItem(itemName: string) {
     for (let i = 0; i < character.items.length; i++) {
         if (character.items[i] && character.items[i]!.name === itemName) {
@@ -308,4 +330,3 @@ export function getInventorySlotOfItem(itemName: string) {
         }
     }
 }
-

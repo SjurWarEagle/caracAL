@@ -1,13 +1,14 @@
 import {Fighter} from "./fighter";
-import {PrimitiveRangedCombat} from "../combat/primitive-ranged-combat";
 import config, {partyMerchant} from "../config";
+import {Position, Wingman} from "../combat/wingman";
 
 export class Priest extends Fighter {
     private lastHeal: number = Date.now();
 
     constructor() {
         super();
-        this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
+        this.combatStrategy = new Wingman(Position.NE, this.huntingHandler, this.broadcastHandler);
+        // this.combatStrategy = new PrimitiveRangedCombat(this.huntingHandler, this.broadcastHandler);
     }
 
     public async startHealingTeam(): Promise<void> {
