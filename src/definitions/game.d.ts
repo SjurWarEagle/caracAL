@@ -109,6 +109,7 @@ export interface Entity {
     mtype?: string;
     transform?: any;
     dead: boolean;
+    visible: boolean;
     npc?: boolean;
     // Buffs are 's' ???? -_-
     s?: { [T in keyof SkillName]: BuffInfo };
@@ -198,6 +199,7 @@ declare global {
      * sell an item from character.items by it's order - 0 to N-1
      */
     function sell(idx: number, quantity: number): void;
+    function is_disabled(entity:Entity): boolean;
 
     //async
     function compound(slot1: number, slot2: number, slot3: number, scroll: number, outputSlot?: number): Promise<any>;

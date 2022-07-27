@@ -1,8 +1,8 @@
-import {Entity, ICharacter} from "../../definitions/game";
-import {determineMonsterTypeMatchingLevel} from "../tasks/common";
-import {AbstractCombat} from "./abstract-combat";
-import {HuntingHandler} from "../tasks/hunting";
-import {BroadCastHandler} from "../tasks/broadcasts";
+import {AbstractCombat} from "../abstract-combat";
+import {determineMonsterTypeMatchingLevel} from "../../tasks/common";
+import {HuntingHandler} from "../../tasks/hunting";
+import {BroadCastHandler} from "../../tasks/broadcasts";
+import {Entity, ICharacter} from "../../../definitions/game";
 
 export class PrimitiveRangedCombat extends AbstractCombat {
 
