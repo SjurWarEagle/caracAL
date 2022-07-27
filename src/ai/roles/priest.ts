@@ -1,6 +1,6 @@
 import {Fighter} from "./fighter";
 import config, {partyMerchant} from "../config";
-import {Position, Wingman} from "../combat/wingman";
+import {Position, Wingman} from "../combat/strategies/wingman";
 
 export class Priest extends Fighter {
     private lastHeal: number = Date.now();
@@ -88,6 +88,7 @@ export class Priest extends Fighter {
         if (await this.neededToCastHeal()) {
             return true;
         }
+        // noinspection RedundantIfStatementJS
         if (await this.neededToCastGroupHeal()) {
             return true;
         }

@@ -13,7 +13,6 @@ import {HuntingHandler} from "../tasks/hunting";
 import {StockMonitor} from "../tasks/restock";
 import {ShoppingHandler} from "../tasks/shopping";
 import {EquipmentHandler} from "../tasks/equipment";
-import {BasicCombat} from "../combat/basic-combat";
 import {AbstractCombat} from "../combat/abstract-combat";
 import {CharAvgCollector} from "../tasks/char-avg-collector";
 import {TrackTrixCollector} from "../tasks/track-trix-collector";
@@ -24,10 +23,10 @@ export abstract class Fighter {
     protected broadcastHandler = new BroadCastHandler();
     protected charAvgCollector: CharAvgCollector = new CharAvgCollector();
     protected huntingHandler = new HuntingHandler(this.broadcastHandler);
-    protected combatStrategy: AbstractCombat = new BasicCombat(this.huntingHandler, this.broadcastHandler);
+    protected combatStrategy?: AbstractCombat | undefined;
     protected equipmentHandler = new EquipmentHandler();
     protected shoppingHandler = new ShoppingHandler();
-    protected trackTrixCollector=new TrackTrixCollector;
+    protected trackTrixCollector = new TrackTrixCollector;
     protected statisticDistributor = new StatisticDistributor(new CharAvgCollector(), this.trackTrixCollector);
     protected stockMonitor = new StockMonitor(this.broadcastHandler);
 
@@ -82,12 +81,14 @@ export abstract class Fighter {
             set_message('⚔')
 
 
-            await this.combatStrategy.setTargetInfo(determineMonsterTypeMatchingLevel());
-            await this.combatStrategy.attack();
+            if (this.combatStrategy) {
+                await this.combatStrategy.setTargetInfo(determineMonsterTypeMatchingLevel());
+                await this.combatStrategy.attack();
+            }
         }, (character.ping || 100) * 2);
 
     }
 
-    abstract performRoleSpecificTasks():Promise<boolean>;
+    abstract performRoleSpecificTasks(): Promise<boolean>;
 }
 

@@ -1,7 +1,7 @@
-import {determineMonsterTypeMatchingLevel} from "../tasks/common";
-import {AbstractCombat} from "./abstract-combat";
-import {HuntingHandler} from "../tasks/hunting";
-import {BroadCastHandler} from "../tasks/broadcasts";
+import {AbstractCombat} from "../abstract-combat";
+import {HuntingHandler} from "../../tasks/hunting";
+import {BroadCastHandler} from "../../tasks/broadcasts";
+import {determineMonsterTypeMatchingLevel} from "../../tasks/common";
 
 export class BasicCombat extends AbstractCombat {
 

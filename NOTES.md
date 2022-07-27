@@ -26,6 +26,7 @@ there also is data in `parent.tracker` not sure if above code is needed for upda
 
 ## Disconnect ##
 ```js
+parent.api_call("disconnect_character", {name: "Sjur"})
 parent.api_call("disconnect_character", {name: "Schnapper"})
 parent.api_call("disconnect_character", {name: "Elvira"})
 ```

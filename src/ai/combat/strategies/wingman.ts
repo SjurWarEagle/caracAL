@@ -1,9 +1,9 @@
-import {Entity, ICharacter} from "../../definitions/game";
-import {determineMonsterTypeMatchingLevel} from "../tasks/common";
-import {AbstractCombat} from "./abstract-combat";
-import {HuntingHandler} from "../tasks/hunting";
-import {BroadCastHandler} from "../tasks/broadcasts";
-import {partyMerchant} from "../config";
+import {AbstractCombat} from "../abstract-combat";
+import {HuntingHandler} from "../../tasks/hunting";
+import {BroadCastHandler} from "../../tasks/broadcasts";
+import {determineMonsterTypeMatchingLevel} from "../../tasks/common";
+import {Entity} from "../../../definitions/game";
+import {partyMerchant} from "../../config";
 
 export enum Position {
     NW, NE, SE, SW

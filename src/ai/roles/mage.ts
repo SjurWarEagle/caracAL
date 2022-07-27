@@ -1,8 +1,11 @@
 import {Fighter} from "./fighter";
+import {Position, Wingman} from "../combat/strategies/wingman";
 
 export class Mage extends Fighter {
+
     constructor() {
         super();
+        this.combatStrategy = new Wingman(Position.NW, this.huntingHandler, this.broadcastHandler);
     }
 
     async performRoleSpecificTasks(): Promise<boolean> {

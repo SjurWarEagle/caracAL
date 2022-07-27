@@ -214,7 +214,7 @@ describe("check sorting", () => {
         expect(input).toBeDefined();
         // expect(input.length).toBe(23);
         expect(input.length).not.toBe(0);
-        const rc = await tools.checkForLoop({"oldPosition": 122, "newPosition": 120},input);
+        const rc = await tools.checkForLoop({"oldPosition": 122, "newPosition": 120}, input);
         expect(rc).toBeDefined();
         expect(rc).toBeFalsy();
         await tools.breakCircles(input);

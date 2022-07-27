@@ -212,7 +212,8 @@ export function determineMonsterTypeMatchingLevel(): TargetInformation {
     rc.allAttackSameTarget = false;
     // rc.mon_type = "phoenix";
     // rc.mon_type = "spider";
-    rc.mon_type = "bee";
+    // rc.mon_type = "bee";
+    rc.mon_type = "croc";
     // rc.mon_type = "goo";
     // rc.mon_type = "armadillo";
     // rc.mon_type = "osnake";
@@ -320,6 +321,16 @@ export function getStock(itemName: string): number {
         }
     }
     return available;
+}
+
+
+//TODO rename this into something useful
+export function myDistance(from: Entity, to: { x: number, y: number }): number {
+    let dX = Math.abs((to.x || 0) - (from.real_x || from.x));
+    let dY = Math.abs((to.y || 0) - (from.real_y || from.y));
+    // noinspection UnnecessaryLocalVariableJS
+    let dist = Math.sqrt(dX * dX + dY * dY);// c^2=a^2+b^2
+    return dist;
 }
 
 

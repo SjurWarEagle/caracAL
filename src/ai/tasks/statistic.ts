@@ -8,7 +8,7 @@ import {TrackTrixCollector} from "./track-trix-collector";
 
 export class StatisticDistributor {
 
-    constructor(private charAvgCollector: CharAvgCollector,private trackTrixCollector: TrackTrixCollector) {
+    constructor(private charAvgCollector: CharAvgCollector, private trackTrixCollector: TrackTrixCollector) {
         charAvgCollector.startCollecting();
     }
 

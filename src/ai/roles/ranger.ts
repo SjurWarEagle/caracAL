@@ -1,5 +1,5 @@
 import {Fighter} from "./fighter";
-import {Position, Wingman} from "../combat/wingman";
+import {Position, Wingman} from "../combat/strategies/wingman";
 
 export class Ranger extends Fighter {
 

@@ -1,10 +1,10 @@
-import {Entity} from "../../definitions/game";
-import {AbstractCombat} from "./abstract-combat";
-
-
 /**
  * for merchant, just avoid contact with the enemy
  */
+import {AbstractCombat} from "../abstract-combat";
+import {Entity} from "../../../definitions/game";
+
+
 export class JustRunAway extends AbstractCombat {
 
     /**

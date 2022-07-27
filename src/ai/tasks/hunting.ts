@@ -1,4 +1,4 @@
-import {ACTIVE_HUNT_INFO, ACTIVE_HUNT_MISSING, getCharacter} from "./common";
+import {ACTIVE_HUNT_INFO, ACTIVE_HUNT_MISSING, getCharacter, myDistance} from "./common";
 import {partyMerchant} from "../config";
 import {BroadCastHandler} from "./broadcasts";
 
@@ -133,14 +133,14 @@ export class HuntingHandler {
                     smart_move(monsterHunterLocations);
                 });
             } else {
-                // if (is_in_range(daisy)) {
-                // @ts-ignore
-                parent.socket.emit("monsterhunt");
-                setTimeout(() => {
+                if (myDistance(character, monsterHunterLocations) < 50) {
                     // @ts-ignore
                     parent.socket.emit("monsterhunt");
-                }, (character.ping || 100) * 2);
-                // }
+                    setTimeout(() => {
+                        // @ts-ignore
+                        parent.socket.emit("monsterhunt");
+                    }, (character.ping || 100) * 2);
+                }
             }
             return true;
         } else {
