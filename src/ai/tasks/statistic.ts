@@ -67,7 +67,12 @@ export class StatisticDistributor {
     }
 
     private async publishTracktrixData() {
-        // await this.postData('http://localhost:3700/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(tracktrixData)))
+        await parent.smart_eval('socket.on("tracker", function(a) {tracker = a;render_tracker();hide_modals()})');
+        await new Promise(f => setTimeout(f, (character.ping||100)*2));
+        await parent.socket.emit("tracker");
+        await new Promise(f => setTimeout(f, (character.ping||100)*2));
+        await this.postData('http://localhost:3700/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(parent.tracker)))
+        console.log(parent.tracker);
     }
 
     private async publishGameInfoData() {
@@ -102,15 +107,25 @@ export class StatisticDistributor {
             }
             if (typeof (object[prop]) == 'object') {
                 //allow some objects
+                // continue;
                 if (!prop.startsWith("items")
+                    && !prop.startsWith("sprites")
                     && !prop.startsWith("slots")
+                    && !prop.startsWith("monsters")
+                    && !prop.startsWith("monsters_diff")
+                    && !prop.startsWith("exchange")
+                    && !prop.startsWith("maps")
+                    && !prop.startsWith("tables")
+                    && !prop.startsWith("max")
+                    && !prop.startsWith("drops")
+                    && !prop.startsWith("global")
+                    && !prop.startsWith("global_static")
                     && prop !== "s"
                     && prop !== "c"
                 ) {
                     // console.log(prop);
                     continue;
                 }
-                // continue;
             }
             if (typeof (object[prop]) == 'function') {
                 continue;

@@ -10,7 +10,6 @@ export class Warrior extends Fighter {
         this.combatStrategy = new RegionCleanCombat(this.huntingHandler, this.broadcastHandler);
 
         startPartyInvite();
-        this.statisticDistributor.startPublishingCharTracktrix();
 
         setInterval(() => {
             this.broadcastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_LEADER_POSITION,

@@ -74,7 +74,11 @@ export class Wingman extends AbstractCombat {
 
         // console.log('wingman, newPos',JSON.stringify(newPos));
         if (!is_moving(character)) {
-            await xmove(newPos.x, newPos.y);
+            if (character.map === newPos.map) {
+                await xmove(newPos.x, newPos.y);
+            } else {
+                await smart_move(newPos);
+            }
         }
     }
 

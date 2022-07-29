@@ -6,11 +6,15 @@ import {Entity, ICharacter} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
 export class RegionCleanCombat extends AbstractCombat {
-    //squidtoad
+    // squidtoad
     // private farmingLocation: { x: number, y: number } = {x: -1140, y: 350};
-    //croc
-    private farmingLocation: { x: number, y: number } = {x: 920, y: 1650};
-    //spider
+    // croc
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
+    // arcticbee
+    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
+    // event
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
+    // spider
     // private farmingLocation: { x: number, y: number } = {x: 817, y: -339};
 
     constructor(protected huntingHandler: HuntingHandler, protected broadcastHandler: BroadCastHandler) {
@@ -28,7 +32,9 @@ export class RegionCleanCombat extends AbstractCombat {
         if (currentTarget) {
             if (distance(character, currentTarget) > character.range) {
                 // console.log('moving to target ', currentTarget);
-                move(currentTarget.real_x || currentTarget.x, currentTarget.real_y || currentTarget.y)
+                if (!smart.moving && !is_moving(character)) {
+                    move(currentTarget.real_x || currentTarget.x, currentTarget.real_y || currentTarget.y)
+                }
             } else {
                 if (get_targeted_monster() !== currentTarget) {
                     change_target(currentTarget);
@@ -47,7 +53,7 @@ export class RegionCleanCombat extends AbstractCombat {
         } else {
             //no target in range, then move to farming position
             if (myDistance(character, this.farmingLocation) > 20) {
-                if (!smart.moving) {
+                if (!smart.moving && !is_moving(character)) {
                     await smart_move(this.farmingLocation);
                 }
             }
@@ -68,14 +74,12 @@ export class RegionCleanCombat extends AbstractCombat {
         let candidatesAttackingTeam = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
+                && entity.xp
+                && entity.xp > 0
+                //only assist if target has much health or is dangerous
                 && (
-                    (entity.target === config.myHelpers[1])
-                    || (entity.target === config.myHelpers[2])
-                    || (entity.target === config.myHelpers[3])
-                    || (entity.target === partyMerchant)
-                    //only assist if target has much health or is dangerous
-                    && ((entity.hp / entity.max_hp > 0.5)
-                        || (entity.attack > 200))
+                    this.isAttackingMerchant(entity)
+                    || this.isAttackingTeamMemberAndMonsterIsDangerousForThem(entity)
                 )
                 && entity.type === 'monster'
                 && (myDistance(character, entity) < 400)
@@ -88,9 +92,11 @@ export class RegionCleanCombat extends AbstractCombat {
         let candidates = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
+                && entity.xp
+                && entity.xp > 0
                 && (!entity.target
                     || entity.target === character.name
-                    || entity.target === partyMerchant)
+                )
                 && entity.type === 'monster'
                 && (myDistance(character, entity) < 100
                     || myDistance(character, this.farmingLocation) < maxDistanceFromFarmingLocation)
@@ -111,6 +117,17 @@ export class RegionCleanCombat extends AbstractCombat {
             return candidates[0];
         }
         return undefined;
+    }
+
+    private isAttackingMerchant(entity: Entity): boolean {
+        return entity.target === partyMerchant;
+    }
+
+    private isAttackingTeamMemberAndMonsterIsDangerousForThem(monster: Entity): boolean {
+        const attackingTeam = (monster.target === config.myHelpers[1]
+            || monster.target === config.myHelpers[2]);
+        const dangerForTeam = monster.attack > 100 && (monster.hp / monster.max_hp) > 0.75;
+        return attackingTeam && dangerForTeam;
     }
 
     private async drawHelperCircles(farmingLocation: { x: number; y: number }, character: ICharacter, maxDistanceFromFarmingLocation: number) {

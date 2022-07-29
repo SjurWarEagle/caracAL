@@ -156,6 +156,9 @@ declare global {
         caracAL: boolean;
         pings: any;
         character: ICharacter;
+        tracker: any;
+        socket: any;
+        smart_eval: any;
         X: CaracAL;
         party_list: string[];
         party: { [name: string]: ICharacter };
@@ -285,7 +288,7 @@ declare global {
 
     function bank_deposit(gold: number): Promise<void>;
 
-    function smart_move(dest: IDestinationSmart | IDestination | Entity | string, onSuccess?: any): void;
+    function smart_move(dest: IDestinationSmart | IDestination | Entity | string, onSuccess?: any): Promise<void>;
 
     function is_moving(char: any): void;
 

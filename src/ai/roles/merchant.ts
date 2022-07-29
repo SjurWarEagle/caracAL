@@ -60,6 +60,7 @@ export class Merchant {
         await this.statisticDistributor.startPublishingGlobalData();
         await this.statisticDistributor.startPublishingCharSpecificData();
         await this.statisticDistributor.startPublishingCharAvgData();
+        await this.statisticDistributor.startPublishingCharTracktrix();
 
         await this.equipmentHandler.startBeNotNaked();
 

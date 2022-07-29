@@ -2,9 +2,9 @@ import {Tools} from "../../tools";
 
 export class EquipmentHandler {
     private tool = new Tools();
-    private itemsToCombine: string[] = ['hpbelt', 'hpamulet', 'ringsj', 'dexamulet', 'intamulet', 'stramulet']
-    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff']
-    private itemsToUpgrade: string[] = ['wcap', 'slimestaff']
+    private itemsToCombine: string[] = ['hpbelt', 'hpamulet', 'ringsj', 'dexamulet', 'intamulet', 'stramulet', 'dexring', 'intring', 'strring', 'vitring']
+    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff','cclaw','sshield']
+    private itemsToUpgrade: string[] = ['wcap', 'slimestaff','wattire']
 
     // private itemsToUpgrade: string[] = ['hpbelt']
 
@@ -29,7 +29,6 @@ export class EquipmentHandler {
             }
         }
         return total;
-
     }
 
     public async getNumberOfStuffToSell(): Promise<number> {

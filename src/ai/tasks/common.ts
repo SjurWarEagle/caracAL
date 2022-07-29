@@ -31,15 +31,67 @@ export function startAcceptingInvites() {
     }, 1_000);
 }
 
+function sendItemsToMerchant(merchant: Entity) {
+    for (let idxInventory = 0; idxInventory < character.items.length - 1; idxInventory++) {
+        const item = character.items[idxInventory];
+        if (!item) {
+            continue;
+        }
+        let itemName = item.name;
+
+        if (item.name === 'tracker') {
+            let currentTracker = getStock('tracker')
+            // console.log(character.name + ': tracker ' + currentTracker);
+            if (currentTracker > 1) {
+                send_item(merchant, idxInventory, 1);
+            }
+        } else if (itemName === "mpot0") {
+            let amount = item.q || 0;
+            amount = Math.max(0, amount - Stocks.minCntMP0);
+            if (amount > 0) {
+                send_item(merchant, idxInventory, amount);
+            }
+        } else if (itemName === "hpot0") {
+            let amount = item.q || 0;
+            amount = Math.max(0, amount - Stocks.minCntHP0);
+            if (amount > 0) {
+                send_item(merchant, idxInventory, amount);
+            }
+        } else if (itemName === "mpot1") {
+            let amount = item.q || 0;
+            amount = Math.max(0, amount - Stocks.minCntMP1);
+            if (amount > 0) {
+                send_item(merchant, idxInventory, amount);
+            }
+        } else if (itemName === "hpot1") {
+            let amount = item.q || 0;
+            amount = Math.max(0, amount - Stocks.minCntHP1);
+            if (amount > 0) {
+                send_item(merchant, idxInventory, amount);
+            }
+        } else {
+            let amount = item.q || 1;
+            // console.log(item.name);
+            // console.log('send_item(',merchant.name,', ',idxInventory,',', amount,');');
+            if (amount > 0) {
+                send_item(merchant, idxInventory, amount);
+            }
+        }
+    }
+}
+
 export function startTransferLootToMerchant(): void { // called by the inviter's name
     setInterval(function () {
-
+        // console.log('startTransferLootToMerchant');
         let merchant = getCharacter(partyMerchant);
         if (!merchant) {
+            // console.log('startTransferLootToMerchant merchant ' + partyMerchant + ' not found');
             return;
         }
         const dist = simple_distance(merchant, character);
-        if (dist > 100) {
+        // console.log('startTransferLootToMerchant.distance', dist);
+        if (dist > 200) {
+            // console.log('startTransferLootToMerchant merchant not close');
             return;
         }
 
@@ -47,51 +99,7 @@ export function startTransferLootToMerchant(): void { // called by the inviter's
         if (character.gold >= amount) {
             send_gold(merchant, amount);
         }
-
-        for (let i = 0; i < character.items.length - 1; i++) {
-            const item = character.items[i];
-            if (!item) {
-                continue;
-            }
-            let itemName = item.name;
-
-            if (item.name === 'tracker') {
-                let currentTracker = getStock('tracker')
-                // console.log(character.name + ': tracker ' + currentTracker);
-                if (currentTracker > 1) {
-                    send_item(merchant, i, 1);
-                }
-            } else if (itemName === "mpot0") {
-                let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntMP0);
-                if (amount > 0) {
-                    send_item(merchant, i, amount);
-                }
-            } else if (itemName === "hpot0") {
-                let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntHP0);
-                if (amount > 0) {
-                    send_item(merchant, i, amount);
-                }
-            } else if (itemName === "mpot1") {
-                let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntMP1);
-                if (amount > 0) {
-                    send_item(merchant, i, amount);
-                }
-            } else if (itemName === "hpot1") {
-                let amount = item.q || 0;
-                amount = Math.max(0, amount - Stocks.minCntHP1);
-                if (amount > 0) {
-                    send_item(merchant, i, amount);
-                }
-            } else {
-                let amount = item.q || 1;
-                if (amount > 0) {
-                    send_item(merchant, i, amount);
-                }
-            }
-        }
+        sendItemsToMerchant(merchant);
     }, 1_000);
 }
 
@@ -159,23 +167,38 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
     }
 
     let mainChar = getCharacter(partyLeader);
-    if (!mainChar) {
+    if (mainChar) {
+        if (character.map === mainChar.map) {
+            let dist = simple_distance(mainChar, getCharacter(character.name));
+            if (dist > 150) {
+                move(mainChar.real_x || mainChar.x || 5, mainChar.real_y || mainChar.y || 5);
+            }
+        } else {
+            await smart_move({
+                map: mainChar.map,
+                x: mainChar.real_x || mainChar.x || 5,
+                y: mainChar.real_y || mainChar.y || 5
+            });
+        }
+    } else {
         // log("Leader '" + partyLeader + "' not in sight, checking last broadcast.");
         let me = getCharacter(character.name)!;
         let dX = Math.abs(broadcast.lastLeaderPosition.x - me.x);
         let dY = Math.abs(broadcast.lastLeaderPosition.y - me.y);
         let dist = Math.sqrt(dX * dX + dY * dY);
-        if (character.map === broadcast.lastLeaderPosition.map && dist > 250) {
-            smart_move({
+        if (character.map !== broadcast.lastLeaderPosition.map) {
+            await smart_move({
                 map: broadcast.lastLeaderPosition.map,
                 x: broadcast.lastLeaderPosition.x + 5,
                 y: broadcast.lastLeaderPosition.y + 5
             });
         }
-    } else {
-        let dist = simple_distance(mainChar, getCharacter(character.name));
-        if (dist > 150) {
-            smart_move({x: mainChar.real_x || 5, y: mainChar.real_y || 5});
+        if (character.map === broadcast.lastLeaderPosition.map && dist > 250) {
+            await smart_move({
+                map: broadcast.lastLeaderPosition.map,
+                x: broadcast.lastLeaderPosition.x + 5,
+                y: broadcast.lastLeaderPosition.y + 5
+            });
         }
     }
 
@@ -264,6 +287,10 @@ export function startPartyInvite() {
 }
 
 export function getCharacter(name: string): Entity | undefined {
+    let char = get_player(name);
+    if (char) {
+        return char;
+    }
     if (parent.caracAL) {
         // const candidate = parent.X.characters.find(x => x.name === name);
         // console.log('no idea how to do this');

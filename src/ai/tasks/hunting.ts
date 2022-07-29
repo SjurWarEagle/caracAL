@@ -6,7 +6,7 @@ import {BroadCastHandler} from "./broadcasts";
 let daisy = parent.G.maps.main.npcs[23];
 let monsterHunterLocations = {
     x: daisy.position[0],
-    y: daisy.position[1]
+    y: daisy.position[1]+10
 };
 
 const rememberedHunts: { [char: string]: any } = {};
@@ -101,9 +101,9 @@ export class HuntingHandler {
         if (hunt.c <= 0) {
             if (!smart.moving) {
                 // console.log("turning in monsterhunter-quest, to main map");
-                await smart_move('main', () => {
+                await smart_move('main', async () => {
                     // console.log("turning in monsterhunter-quest, to daisy");
-                    smart_move(monsterHunterLocations)
+                    await smart_move(monsterHunterLocations)
                 });
             } else {
                 // @ts-ignore
