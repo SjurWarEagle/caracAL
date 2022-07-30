@@ -67,11 +67,13 @@ export abstract class AbstractCombat {
                 if (this.broadCastHandler.commonTarget) {
                     console.log(character.name + ': there is a target, but I do not see it. Moving closer (' + this.broadCastHandler.commonTarget?.x + '/' + this.broadCastHandler.commonTarget?.y + ')');
                     try {
-                        await smart_move({
-                            map: this.broadCastHandler.commonTarget?.map,
-                            x: this.broadCastHandler.commonTarget?.x!,
-                            y: this.broadCastHandler.commonTarget?.y!
-                        });
+                        if (!smart.moving) {
+                            await smart_move({
+                                map: this.broadCastHandler.commonTarget?.map,
+                                x: this.broadCastHandler.commonTarget?.x!,
+                                y: this.broadCastHandler.commonTarget?.y!
+                            });
+                        }
                     } catch (e) {
                         // await smart_move('main');
                     }
@@ -106,7 +108,7 @@ export abstract class AbstractCombat {
                 this.target = get_nearest_monster({type: mon_type, target: helper});
             }
         }
-        if (!this.target && (!is_moving(character))) {
+        if (!this.target && (!is_moving(character)) && !smart.moving) {
             // if no target was found, move in the general direction of monster type
             await smart_move(mon_type);
         }
