@@ -72,7 +72,7 @@ export class Priest extends Fighter {
             }
             if (simple_distance(character, target) <= 200) {
                 //todo what is the real distance to check?!
-                console.log('healing "' + name + '" (' + target?.hp + '/' + target?.max_hp + ')');
+                // console.log('healing "' + name + '" (' + target?.hp + '/' + target?.max_hp + ')');
                 this.lastHeal = Date.now();
                 await heal(target);
             }

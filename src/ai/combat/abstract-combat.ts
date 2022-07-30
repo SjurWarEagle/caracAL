@@ -123,8 +123,8 @@ export abstract class AbstractCombat {
                 }
             ;
             this.broadCastHandler.commonTarget = data;
-            console.log(character.name + ': ⚔ saving new common target');
-            console.log('to:', JSON.stringify(data));
+            // console.log(character.name + ': ⚔ saving new common target');
+            // console.log('to:', JSON.stringify(data));
             this.broadCastHandler.broadcastToTeam(BroadCastHandler.BROADCAST_NEW_TARGET, data);
 
         }

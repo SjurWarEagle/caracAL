@@ -77,7 +77,7 @@ export class StatisticDistributor {
         await parent.socket.emit("tracker");
         await new Promise(f => setTimeout(f, (character.ping || 100) * 2));
         await this.postData(this.apiHost + '/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(parent.tracker)))
-        console.log(parent.tracker);
+        // console.log(parent.tracker);
     }
 
     private async publishGameInfoData() {
