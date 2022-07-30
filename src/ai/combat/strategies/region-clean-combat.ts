@@ -13,9 +13,9 @@ export class RegionCleanCombat extends AbstractCombat {
     // croc
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
     // arcticbee
-    // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
+    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
     // wild boars
-    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
     // event
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
     // spider
