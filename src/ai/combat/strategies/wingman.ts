@@ -1,7 +1,7 @@
 import {AbstractCombat} from "../abstract-combat";
 import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
-import {determineMonsterTypeMatchingLevel} from "../../tasks/common";
+import {determineMonsterTypeMatchingLevel, myDistance} from "../../tasks/common";
 import {Entity} from "../../../definitions/game";
 import {partyMerchant} from "../../config";
 
@@ -73,7 +73,7 @@ export class Wingman extends AbstractCombat {
         // const leader = get_player(partyLeader);
 
         // console.log('wingman, newPos',JSON.stringify(newPos));
-        if (!is_moving(character)) {
+        if (!is_moving(character) && myDistance(character, newPos)>5) {
             if (character.map === newPos.map) {
                 await xmove(newPos.x, newPos.y);
             } else {
