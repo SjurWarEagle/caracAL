@@ -7,6 +7,8 @@ import {CharAvgCollector} from "./char-avg-collector";
 import {TrackTrixCollector} from "./track-trix-collector";
 
 export class StatisticDistributor {
+    private apiHost = 'http://al-dashboard.tkunkel.de';
+    // private apiHost = 'http://localhost:3700';
 
     // noinspection JSUnusedLocalSymbols
     constructor(private charAvgCollector: CharAvgCollector, private trackTrixCollector: TrackTrixCollector) {
@@ -53,20 +55,20 @@ export class StatisticDistributor {
         setInterval(() => {
             this.publishGameInfoData();
             this.publishCInfoData();
-        // }, 10_000)
+            // }, 10_000)
         }, 300_000)
     }
 
     public async publishBankContent() {
-        await this.postData('http://localhost:3700/api/bank', character.bank);
+        await this.postData(this.apiHost + '/api/bank', character.bank);
     }
 
     private async publishCharAvgData() {
-        await this.postData('http://localhost:3700/api/charAvg', this.charAvgCollector.getAndReset());
+        await this.postData(this.apiHost + '/api/charAvg', this.charAvgCollector.getAndReset());
     }
 
     private async publishCharData() {
-        await this.postData('http://localhost:3700/api/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
+        await this.postData(this.apiHost + '/api/character', JSON.parse(this.stringifyWithoutMethods(parent.character)))
     }
 
     private async publishTracktrixData() {
@@ -74,12 +76,12 @@ export class StatisticDistributor {
         await new Promise(f => setTimeout(f, (character.ping || 100) * 2));
         await parent.socket.emit("tracker");
         await new Promise(f => setTimeout(f, (character.ping || 100) * 2));
-        await this.postData('http://localhost:3700/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(parent.tracker)))
+        await this.postData(this.apiHost + '/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(parent.tracker)))
         console.log(parent.tracker);
     }
 
     private async publishGameInfoData() {
-        await this.postData('http://localhost:3700/api/gameInfo', G)
+        await this.postData(this.apiHost + '/api/gameInfo', G)
     }
 
     private async publishCInfoData() {
@@ -92,9 +94,9 @@ export class StatisticDistributor {
             }
         })
         // console.log(data);
-        data =JSON.parse(this.stringifyWithoutMethods(data));
+        data = JSON.parse(this.stringifyWithoutMethods(data));
         // console.log(data);
-        await this.postData('http://localhost:3700/api/cInfo', {data: data})
+        await this.postData(this.apiHost + '/api/cInfo', {data: data})
     }
 
     private async postData(url = '', data = {}): Promise<void> {
