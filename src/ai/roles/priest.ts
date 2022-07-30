@@ -1,6 +1,7 @@
 import {Fighter} from "./fighter";
 import config, {partyMerchant} from "../config";
 import {Position, Wingman} from "../combat/strategies/wingman";
+import {Entity} from "../../definitions/game";
 
 export class Priest extends Fighter {
     private lastHeal: number = Date.now();
@@ -51,28 +52,35 @@ export class Priest extends Fighter {
         if (is_on_cooldown("attack")) {
             return true;
         }
+        let lowestHealthPercent = 1;
+        let target: Entity | undefined;
         for (const name of allCharNames) {
             // if (name === character.name) {
             //     continue;
             // }
-            const target = get_player(name);
-            if (!target) {
+            let tmpTarget = get_player(name);
+            if (!tmpTarget) {
                 // console.log('target "' + name + '" not in range');
                 continue;
             }
-            if (target.hp <= 0) {
+            if (tmpTarget.hp <= 0) {
                 //dead
                 continue;
             }
-            if ((target?.max_hp || 0) - (target?.hp || 0) <= character.attack * 0.5) {
+            if ((tmpTarget?.max_hp || 0) - (tmpTarget?.hp || 0) <= character.attack * 0.5) {
                 //healthy enough
                 //not at full health
                 //and not if only half the potential is used, better to heal someone else if needed
                 continue;
             }
-            if (simple_distance(character, target) <= 200) {
-                //todo what is the real distance to check?!
+            if (simple_distance(character, tmpTarget) <= character.range) {
                 // console.log('healing "' + name + '" (' + target?.hp + '/' + target?.max_hp + ')');
+                if (tmpTarget.hp / tmpTarget.max_hp < lowestHealthPercent) {
+                    lowestHealthPercent = tmpTarget.hp / tmpTarget.max_hp;
+                    target = tmpTarget;
+                }
+            }
+            if (target) {
                 this.lastHeal = Date.now();
                 await heal(target);
             }
