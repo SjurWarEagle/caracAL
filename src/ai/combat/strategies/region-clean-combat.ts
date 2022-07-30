@@ -93,6 +93,20 @@ export class RegionCleanCombat extends AbstractCombat {
             return candidatesAttackingTeam[0];
         }
 
+        let candidatesAttackingMe = Object.values(parent.entities).filter((entity) => {
+            return !entity.dead
+                && entity.visible
+                && entity.xp
+                && entity.xp > 0
+                && entity.target==character.name
+                && entity.type === 'monster'
+                && (myDistance(character, entity) < 400)
+        });
+        if (candidatesAttackingMe && candidatesAttackingMe.length > 0) {
+            // console.log('new target', candidates[0].name);
+            return candidatesAttackingMe[0];
+        }
+
         let candidates = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
