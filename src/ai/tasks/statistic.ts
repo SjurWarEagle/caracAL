@@ -8,6 +8,7 @@ import {TrackTrixCollector} from "./track-trix-collector";
 
 export class StatisticDistributor {
 
+    // noinspection JSUnusedLocalSymbols
     constructor(private charAvgCollector: CharAvgCollector, private trackTrixCollector: TrackTrixCollector) {
         charAvgCollector.startCollecting();
     }
@@ -51,6 +52,8 @@ export class StatisticDistributor {
     public async startPublishingGlobalData() {
         setInterval(() => {
             this.publishGameInfoData();
+            this.publishCInfoData();
+        // }, 10_000)
         }, 300_000)
     }
 
@@ -68,15 +71,30 @@ export class StatisticDistributor {
 
     private async publishTracktrixData() {
         await parent.smart_eval('socket.on("tracker", function(a) {tracker = a;render_tracker();hide_modals()})');
-        await new Promise(f => setTimeout(f, (character.ping||100)*2));
+        await new Promise(f => setTimeout(f, (character.ping || 100) * 2));
         await parent.socket.emit("tracker");
-        await new Promise(f => setTimeout(f, (character.ping||100)*2));
+        await new Promise(f => setTimeout(f, (character.ping || 100) * 2));
         await this.postData('http://localhost:3700/api/tracktrix', JSON.parse(this.stringifyWithoutMethods(parent.tracker)))
         console.log(parent.tracker);
     }
 
     private async publishGameInfoData() {
         await this.postData('http://localhost:3700/api/gameInfo', G)
+    }
+
+    private async publishCInfoData() {
+        // console.log( JSON.parse(this.stringifyWithoutMethods(parent.C)));
+        let data: any = {};
+        Object.keys(parent.C).forEach(key => {
+            if (key && key.endsWith('.png')) {
+                data[key] = JSON.parse(this.stringifyWithoutMethods(parent.C[key]));
+                // data[key]._events=undefined;
+            }
+        })
+        // console.log(data);
+        data =JSON.parse(this.stringifyWithoutMethods(data));
+        // console.log(data);
+        await this.postData('http://localhost:3700/api/cInfo', {data: data})
     }
 
     private async postData(url = '', data = {}): Promise<void> {
@@ -107,7 +125,6 @@ export class StatisticDistributor {
             }
             if (typeof (object[prop]) == 'object') {
                 //allow some objects
-                // continue;
                 if (!prop.startsWith("items")
                     && !prop.startsWith("sprites")
                     && !prop.startsWith("slots")
@@ -120,6 +137,8 @@ export class StatisticDistributor {
                     && !prop.startsWith("drops")
                     && !prop.startsWith("global")
                     && !prop.startsWith("global_static")
+                    && !prop.endsWith(".png")
+                    && !prop.endsWith("data")
                     && prop !== "s"
                     && prop !== "c"
                 ) {

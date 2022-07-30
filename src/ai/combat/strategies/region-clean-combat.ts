@@ -6,12 +6,16 @@ import {Entity, ICharacter} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
 export class RegionCleanCombat extends AbstractCombat {
+    // porcubine - DANGER
+    // private farmingLocation: { x: number, y: number } = {map:'desertland',:x: -1140, y: 350};
     // squidtoad
     // private farmingLocation: { x: number, y: number } = {x: -1140, y: 350};
     // croc
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
     // arcticbee
-    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
+    // wild boars
+    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
     // event
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
     // spider
@@ -130,15 +134,15 @@ export class RegionCleanCombat extends AbstractCombat {
         return attackingTeam && dangerForTeam;
     }
 
-    private async drawHelperCircles(farmingLocation: { x: number; y: number }, character: ICharacter, maxDistanceFromFarmingLocation: number) {
-        await clear_drawings();
-
-        if (farmingLocation) {
-            draw_circle(farmingLocation.x, farmingLocation.y, maxDistanceFromFarmingLocation, 4, 0x00FFFF);
-        }
-        // draw_circle(character.x, character.y, 100, 4, 0x00FFFF);
-
-    }
+    // private async drawHelperCircles(farmingLocation: { x: number; y: number }, character: ICharacter, maxDistanceFromFarmingLocation: number) {
+    //     await clear_drawings();
+    //
+    //     if (farmingLocation) {
+    //         draw_circle(farmingLocation.x, farmingLocation.y, maxDistanceFromFarmingLocation, 4, 0x00FFFF);
+    //     }
+    //     // draw_circle(character.x, character.y, 100, 4, 0x00FFFF);
+    //
+    // }
 }
 
 // function get_nearest_monster(args) {
