@@ -3,7 +3,7 @@ import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
 import {determineMonsterTypeMatchingLevel, myDistance} from "../../tasks/common";
 import {Entity} from "../../../definitions/game";
-import {partyMerchant} from "../../config";
+import config, {partyMerchant} from "../../config";
 
 export enum Position {
     NW, NE, SE, SW
@@ -73,7 +73,7 @@ export class Wingman extends AbstractCombat {
         // const leader = get_player(partyLeader);
 
         // console.log('wingman, newPos',JSON.stringify(newPos));
-        if (!is_moving(character) && myDistance(character, newPos)>5) {
+        if (!is_moving(character) && myDistance(character, newPos) > 5) {
             if (character.map === newPos.map) {
                 await xmove(newPos.x, newPos.y);
             } else {
@@ -108,23 +108,61 @@ export class Wingman extends AbstractCombat {
         return newPos;
     }
 
+    private isAttackingMerchant(entity: Entity): boolean {
+        return entity.target === partyMerchant;
+    }
+
+    private isAttackingTeamMemberAndMonsterIsDangerousForThem(monster: Entity): boolean {
+        const attackingTeam = (monster.target === config.myHelpers[1]
+            || monster.target === config.myHelpers[2]);
+        const dangerForTeam = monster.attack > 100 && (monster.hp / monster.max_hp) > 0.75;
+        return attackingTeam && dangerForTeam;
+    }
+
     private async findNewTarget(): Promise<Entity | undefined> {
-        //todo add range-limit to not search everywhere in the world
-        let newTarget: Entity | undefined = get_nearest_monster({target: character.name});
-        if (!newTarget) {
-            newTarget = get_nearest_monster({target: partyMerchant});
+
+        let candidatesAttackingMe = Object.values(parent.entities).filter((entity) => {
+            return !entity.dead
+                && entity.visible
+                && entity.xp
+                && entity.xp > 0
+                && entity.target == character.name
+                && entity.type === 'monster'
+                && !entity!.mtype?.startsWith('target_')
+                && (myDistance(character, entity) < 400)
+        });
+        if (candidatesAttackingMe && candidatesAttackingMe.length > 0) {
+            return candidatesAttackingMe[0];
         }
-        if (!newTarget) {
-            newTarget = get_nearest_monster();
-        }
-        if (newTarget) {
-            if (newTarget.damage || 0 >= 200) {
-                newTarget = undefined;
+        if (is_moving(character)) {
+            //if moving only easy targets
+            let candidatesEasy = Object.values(parent.entities).filter((entity) => {
+                return !entity.dead
+                    && entity.visible
+                    && entity.xp
+                    && entity.hp
+                    && entity.hp <= character.attack
+                    && entity.xp > 0
+                    && entity.type === 'monster'
+                    && !entity!.mtype?.startsWith('target_')
+                    && (myDistance(character, entity) < 1.5 * character.range)
+            });
+            if (candidatesEasy && candidatesEasy.length > 0) {
+                return candidatesEasy[0];
             }
-            if (newTarget!.mtype?.startsWith('target_')) {
-                newTarget = undefined;
+        } else {
+            let candidates = Object.values(parent.entities).filter((entity) => {
+                return !entity.dead
+                    && entity.visible
+                    && entity.xp
+                    && entity.xp > 0
+                    && entity.type === 'monster'
+                    && !entity!.mtype?.startsWith('target_')
+                    && (myDistance(character, entity) < 300)
+            });
+            if (candidates && candidates.length > 0) {
+                return candidates[0];
             }
         }
-        return newTarget;
     }
 }

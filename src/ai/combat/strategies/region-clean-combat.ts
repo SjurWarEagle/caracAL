@@ -1,25 +1,11 @@
 import {AbstractCombat} from "../abstract-combat";
 import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
-import {determineMonsterTypeMatchingLevel, myDistance} from "../../tasks/common";
-import {Entity, ICharacter} from "../../../definitions/game";
+import {determineMonsterTypeMatchingLevel, move_half_way, myDistance} from "../../tasks/common";
+import {Entity} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
 export class RegionCleanCombat extends AbstractCombat {
-    // porcubine - DANGER
-    // private farmingLocation: { x: number, y: number } = {map:'desertland',:x: -1140, y: 350};
-    // squidtoad
-    // private farmingLocation: { x: number, y: number } = {x: -1140, y: 350};
-    // croc
-    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
-    // arcticbee
-    private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: 1108, y: -900};
-    // wild boars
-    // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
-    // event
-    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
-    // spider
-    // private farmingLocation: { x: number, y: number } = {x: 817, y: -339};
 
     constructor(protected huntingHandler: HuntingHandler, protected broadcastHandler: BroadCastHandler) {
         super(huntingHandler, broadcastHandler);
@@ -37,7 +23,10 @@ export class RegionCleanCombat extends AbstractCombat {
             if (distance(character, currentTarget) > character.range) {
                 // console.log('moving to target ', currentTarget);
                 if (!smart.moving && !is_moving(character)) {
-                    move(currentTarget.real_x || currentTarget.x, currentTarget.real_y || currentTarget.y)
+                    await move_half_way({
+                        x: currentTarget.real_x || currentTarget.x,
+                        y: currentTarget.real_y || currentTarget.y
+                    });
                 }
             } else {
                 if (get_targeted_monster() !== currentTarget) {
@@ -48,7 +37,7 @@ export class RegionCleanCombat extends AbstractCombat {
                         await attack(currentTarget);
                     } catch (e: any) {
                         if (e && e.reason && e.reason !== 'not_found') {
-                            //enemy might gotten killed already
+                            //enemy might be killed already
                             console.error('error attacking', e);
                         }
                     }
@@ -56,9 +45,10 @@ export class RegionCleanCombat extends AbstractCombat {
             }
         } else {
             //no target in range, then move to farming position
-            if (myDistance(character, this.farmingLocation) > 20) {
+            if (myDistance(character, this.targetInformation!.farmingLocation) > 20) {
                 if (!smart.moving && !is_moving(character)) {
-                    await smart_move(this.farmingLocation);
+                    await smart_move(this.targetInformation!.farmingLocation);
+                    // await smart_move_half_way(this.farmingLocation);
                 }
             }
         }
@@ -71,7 +61,7 @@ export class RegionCleanCombat extends AbstractCombat {
         }
         const maxDistanceFromFarmingLocation: number = 300;
 
-        if (myDistance(character, this.farmingLocation) > 2 * maxDistanceFromFarmingLocation) {
+        if (myDistance(character, this.targetInformation!.farmingLocation) > 2 * maxDistanceFromFarmingLocation) {
             return undefined;
         }
 
@@ -86,8 +76,14 @@ export class RegionCleanCombat extends AbstractCombat {
                     || this.isAttackingTeamMemberAndMonsterIsDangerousForThem(entity)
                 )
                 && entity.type === 'monster'
-                && (myDistance(character, entity) < 400)
+                && (myDistance(character, entity) <= 320)
         });
+        for (let candidate of candidatesAttackingTeam) {
+            if (can_use('taunt')) {
+                change_target(candidate);
+                use_skill('taunt');
+            }
+        }
         if (candidatesAttackingTeam && candidatesAttackingTeam.length > 0) {
             // console.log('new target', candidates[0].name);
             return candidatesAttackingTeam[0];
@@ -98,7 +94,7 @@ export class RegionCleanCombat extends AbstractCombat {
                 && entity.visible
                 && entity.xp
                 && entity.xp > 0
-                && entity.target==character.name
+                && entity.target == character.name
                 && entity.type === 'monster'
                 && (myDistance(character, entity) < 400)
         });
@@ -116,19 +112,20 @@ export class RegionCleanCombat extends AbstractCombat {
                     || entity.target === character.name
                 )
                 && entity.type === 'monster'
-                && (myDistance(character, entity) < 100
-                    || myDistance(character, this.farmingLocation) < maxDistanceFromFarmingLocation)
+                && myDistance(character, entity) < maxDistanceFromFarmingLocation * 2
+                && myDistance(character, this.targetInformation!.farmingLocation) < maxDistanceFromFarmingLocation
         });
         candidates = candidates.sort((a, b) => {
-            // the closer to center of farming location, the more intersting
-            return myDistance(a, this.farmingLocation) - myDistance(b, this.farmingLocation);
+            // the closer to center of farming location, the more interesting
+            return myDistance(a, this.targetInformation!.farmingLocation) - myDistance(b, this.targetInformation!.farmingLocation);
         })
-        // clear_drawings();
-        // candidates.forEach(entity => {
-        //     draw_circle(entity.real_x || entity.x, (entity.real_y || entity.y), 10, 2, 0xFF0000);
-        // })
 
-        // await this.drawHelperCircles(this.farmingLocation, character, maxDistanceFromFarmingLocation);
+        // // clear_drawings();
+        // // candidates.forEach(entity => {
+        // //     draw_circle(entity.real_x || entity.x, (entity.real_y || entity.y), 10, 2, 0xFF0000);
+        // // })
+        // //
+        // // await this.drawHelperCircles(this.farmingLocation, character, maxDistanceFromFarmingLocation);
 
         if (candidates && candidates.length > 0) {
             // console.log('new target', candidates[0].name);

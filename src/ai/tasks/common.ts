@@ -210,39 +210,28 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 
 
 export function determineMonsterTypeMatchingLevel(): TargetInformation {
+
     let rc: TargetInformation = {
         mon_type: '',
-        allAttackSameTarget: true
+        allAttackSameTarget: true,
+        farmingLocation: {map: 'main', x: 920, y: 1650},
     };
-    if (character.level < 30) {
-        rc.mon_type = "goo";
-    } else if (character.level < 35) {
-        rc.mon_type = "crab";
-    } else if (character.level < 40) {
-        rc.mon_type = "bee";
-    } else if (character.level < 50) {
-        rc.mon_type = "tortoise";
-    } else if (character.level < 60) {
-        rc.mon_type = "spider";
-    } else if (character.level < 70) {
-        rc.mon_type = "pppompom";
-    } else {
-        rc.mon_type = "spider";
-    }
+    // porcubine - DANGER
+    // private farmingLocation: { x: number, y: number } = {map:'desertland',:x: -1140, y: 350};
+    // squidtoad
+    // private farmingLocation: { x: number, y: number } = {x: -1140, y: 350};
+    // croc
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
+    // arcticbee
+    rc.farmingLocation = {map: 'winterland', x: 1108, y: -900};
+    // wild boars
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
+    // event
+    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
+    // spider
+    // private farmingLocation: { x: number, y: number } = {x: 817, y: -339};
 
-    //manual overrride
-    // rc.allAttackSameTarget = true;
     rc.allAttackSameTarget = false;
-    // rc.mon_type = "phoenix";
-    // rc.mon_type = "spider";
-    // rc.mon_type = "bee";
-    rc.mon_type = "croc";
-    // rc.mon_type = "goo";
-    // rc.mon_type = "armadillo";
-    // rc.mon_type = "osnake";
-    // rc.mon_type = "snake";
-    // rc.mon_type = "tortoise";
-    // rc.mon_type = "minimush";
 
     return rc;
 
@@ -360,6 +349,25 @@ export function myDistance(from: Entity, to: { x: number, y: number }): number {
     return dist;
 }
 
+
+export async function smart_move_half_way(to: { map: string, x: number, y: number }) {
+    let x = ((character.real_x || character.x) + to.x) / 2;
+    let y = ((character.real_y || character.y) + to.y) / 2;
+    try {
+        return smart_move({map: to.map, x: x, y: y})
+    } catch (e: any) {
+        console.log('error smart move', e);
+        if (e && e.reason && e.reason === 'failed') {
+            await smart_move(to);
+        }
+    }
+}
+
+export async function move_half_way(to: { x: number, y: number }) {
+    let x = ((character.real_x || character.x) + to.x) / 2;
+    let y = ((character.real_y || character.y) + to.y) / 2;
+    return move(x, y)
+}
 
 export function getInventorySlotOfItem(itemName: string) {
     for (let i = 0; i < character.items.length; i++) {

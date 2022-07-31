@@ -40,7 +40,9 @@ export class Merchant {
         }
         if (character.gold < 1_000_000 && character.bank) {
             set_message('leave bank')
-            await smart_move("main")
+            if (!is_moving(character)) {
+                await smart_move("main")
+            }
             return false;
         }
         if (character.bank) {
@@ -48,9 +50,11 @@ export class Merchant {
             return true;
         } else {
             set_message('to bank')
-            await smart_move("bank", async () => {
-                await this.depositStuffIntoBank();
-            });
+            if (!is_moving(character)) {
+                await smart_move("bank", async () => {
+                    await this.depositStuffIntoBank();
+                });
+            }
             return true;
         }
     }

@@ -11,6 +11,7 @@
     "rm:localstorage": "rimraf localStorage/storage.json",
     "test": "jest",
     "start": "node main.js",
+    "start:inspect": "node --inspect main.js",
     "upload": "ts-node src/upload/upload.ts",
     "build:upload": "run-s build:all:dev upload ",
     "start:withbuild": "run-s build:all:dev rm:localstorage start",
