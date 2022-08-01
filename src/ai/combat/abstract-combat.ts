@@ -2,7 +2,7 @@ import {TargetInformation} from "./target-information";
 import {Entity} from "../../definitions/game";
 import config, {partyLeader, partyMerchant} from "../config";
 import {HuntingHandler} from "../tasks/hunting";
-import {getCharacter} from "../tasks/common";
+import {determineMonsterTypeMatchingLevel, getCharacter} from "../tasks/common";
 import {BroadCastHandler, CommonTarget} from "../tasks/broadcasts";
 
 export abstract class AbstractCombat {
@@ -17,6 +17,9 @@ export abstract class AbstractCombat {
 
     constructor(protected huntingHandler: HuntingHandler,
                 protected broadCastHandler: BroadCastHandler) {
+        determineMonsterTypeMatchingLevel(huntingHandler).then((data) => {
+            this.targetInformation = data;
+        })
     }
 
     protected async getTargetByTargetInfo(): Promise<Entity | undefined> {

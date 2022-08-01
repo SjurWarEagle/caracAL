@@ -1,7 +1,7 @@
 import {AbstractCombat} from "../abstract-combat";
 import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
-import {determineMonsterTypeMatchingLevel, myDistance} from "../../tasks/common";
+import {myDistance} from "../../tasks/common";
 import {Entity} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
@@ -20,7 +20,6 @@ export class Wingman extends AbstractCombat {
 
     constructor(private position: Position, protected huntingHandler: HuntingHandler, protected broadcastHandler: BroadCastHandler) {
         super(huntingHandler, broadcastHandler);
-        this.targetInformation = determineMonsterTypeMatchingLevel();
     }
 
     private async drawHelperCircle(target: Entity, newPosition: any) {

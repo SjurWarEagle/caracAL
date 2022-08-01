@@ -79,6 +79,15 @@ export interface BuffInfo {
     f: string;
     // duration in ms
     ms: number;
+    /**
+     * server
+     */
+    sn?: string;
+    /**
+     * monster type
+    */
+    id?: string;
+    c?: number;
 }
 
 export interface Entity {
@@ -102,6 +111,7 @@ export interface Entity {
     attack: number;
     target: string;
     damage: number;
+    dreturn?: number;
     xp: number;
     y: number;
     x: number;

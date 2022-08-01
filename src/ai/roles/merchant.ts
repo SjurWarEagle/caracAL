@@ -70,7 +70,6 @@ export class Merchant {
 
         await this.stockMonitor.startCollectingRequests();
         this.broadcastHandler.listenForLastLeaderPosition();
-        this.huntingHandler.receiveBroadCastHunts();
 
         setInterval(async () => {
             // await new Tools().sortBank();

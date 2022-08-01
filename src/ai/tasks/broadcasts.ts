@@ -1,4 +1,4 @@
-import config, {partyMerchant} from "../config";
+import config, {partyLeader} from "../config";
 import {getCharacter} from "./common";
 
 export class CommonTarget {
@@ -72,7 +72,7 @@ export class BroadCastHandler {
                 data.type = BroadCastHandler.BROADCAST_ACTIVE_HUNT_MISSING;
             }
             let msg = JSON.stringify(data)
-            send_cm(partyMerchant, msg);
+            send_cm(partyLeader, msg);
         }, 30_000);
     }
 

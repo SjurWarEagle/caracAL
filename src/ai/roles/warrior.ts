@@ -9,6 +9,7 @@ export class Warrior extends Fighter {
         super();
         this.combatStrategy = new RegionCleanCombat(this.huntingHandler, this.broadcastHandler);
 
+        this.huntingHandler.receiveBroadCastHunts();
         startPartyInvite();
 
         setInterval(() => {

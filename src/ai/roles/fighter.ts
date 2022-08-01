@@ -82,7 +82,7 @@ export abstract class Fighter {
 
 
             if (this.combatStrategy) {
-                await this.combatStrategy.setTargetInfo(determineMonsterTypeMatchingLevel());
+                await this.combatStrategy.setTargetInfo(await determineMonsterTypeMatchingLevel(this.huntingHandler));
                 await this.combatStrategy.attack();
             }
         }, (character.ping || 100) * 2);

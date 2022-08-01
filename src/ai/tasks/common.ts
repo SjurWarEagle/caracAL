@@ -2,6 +2,7 @@ import config, {getValue, partyLeader, partyMerchant, setValue, Stocks} from "..
 import {Entity} from "../../definitions/game";
 import {BroadCastHandler} from "./broadcasts";
 import {TargetInformation} from "../combat/target-information";
+import {HuntingHandler} from "./hunting";
 
 export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
@@ -209,30 +210,62 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 }
 
 
-export function determineMonsterTypeMatchingLevel(): TargetInformation {
-
-    let rc: TargetInformation = {
-        mon_type: '',
-        allAttackSameTarget: true,
-        farmingLocation: {map: 'main', x: 920, y: 1650},
-    };
+export function getFarmingLocationForMonsterType(huntType: string): { map: string, x: number, y: number } | undefined {
     // porcubine - DANGER
     // private farmingLocation: { x: number, y: number } = {map:'desertland',:x: -1140, y: 350};
-    // squidtoad
-    // private farmingLocation: { x: number, y: number } = {x: -1140, y: 350};
-    // croc
-    // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: 920, y: 1650};
-    // arcticbee
-    rc.farmingLocation = {map: 'winterland', x: 1108, y: -900};
     // wild boars
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
     // event
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'main', x: -1139, y: 1685};
-    // spider
-    // private farmingLocation: { x: number, y: number } = {x: 817, y: -339};
 
-    rc.allAttackSameTarget = false;
+    let farmingLocation = undefined;
 
+    switch (huntType) {
+        case "bee":
+            farmingLocation = {map: 'main', x: 546, y: 1059};
+            break;
+        case "goo":
+            farmingLocation = {map: 'main', x: 16, y: 723};
+            break;
+        case "spider":
+            farmingLocation = {map: 'main', x: 817, y: -339};
+            break;
+        case "squidtoad":
+            farmingLocation = {map: 'main', x: -1140, y: 350};
+            break;
+        case "croc":
+            farmingLocation = {map: 'main', x: 920, y: 1650};
+            break;
+        case "osnake":
+        case "snake":
+            farmingLocation = {map: 'halloween', x: 320, y: -670};
+            break;
+        case "minimush":
+            farmingLocation = {map: 'halloween', x: 130, y: 600};
+            break;
+        case "poisio":
+            farmingLocation = {map: 'main', x: -252, y: 1424};
+            break;
+        case "arcticbee":
+            farmingLocation = {map: 'winterland', x: 1108, y: -900};
+            break;
+    }
+    return farmingLocation;
+}
+
+export async function determineMonsterTypeMatchingLevel(huntingHandler: HuntingHandler): Promise<TargetInformation> {
+    let rc: TargetInformation = {
+        mon_type: '',
+        allAttackSameTarget: false,
+        farmingLocation: {map: 'winterland', x: 1108, y: -900},
+    };
+
+    const huntType = await huntingHandler.getTypOfMonsterToHunt();
+    // console.log('huntType', huntType);
+    if (!huntType) {
+        return rc;
+    }
+    rc.farmingLocation = getFarmingLocationForMonsterType(huntType);
     return rc;
 
 }

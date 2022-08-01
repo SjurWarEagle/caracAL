@@ -1,7 +1,7 @@
 import {AbstractCombat} from "../abstract-combat";
 import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
-import {determineMonsterTypeMatchingLevel, move_half_way, myDistance} from "../../tasks/common";
+import {move_half_way, myDistance} from "../../tasks/common";
 import {Entity} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
@@ -9,7 +9,6 @@ export class RegionCleanCombat extends AbstractCombat {
 
     constructor(protected huntingHandler: HuntingHandler, protected broadcastHandler: BroadCastHandler) {
         super(huntingHandler, broadcastHandler);
-        this.targetInformation = determineMonsterTypeMatchingLevel();
     }
 
     async attack(): Promise<void> {
@@ -45,10 +44,14 @@ export class RegionCleanCombat extends AbstractCombat {
             }
         } else {
             //no target in range, then move to farming position
-            if (myDistance(character, this.targetInformation!.farmingLocation) > 20) {
+            if (this.targetInformation!.farmingLocation && myDistance(character, this.targetInformation!.farmingLocation) > 20) {
                 if (!smart.moving && !is_moving(character)) {
-                    await smart_move(this.targetInformation!.farmingLocation);
-                    // await smart_move_half_way(this.farmingLocation);
+                    if (this.targetInformation!.farmingLocation.map !== character.map) {
+                        console.log('switching map because', this.targetInformation!.farmingLocation.map, '!==', character.map);
+                        await smart_move(this.targetInformation!.farmingLocation.map);
+                    } else {
+                        await smart_move(this.targetInformation!.farmingLocation);
+                    }
                 }
             }
         }
@@ -61,13 +64,16 @@ export class RegionCleanCombat extends AbstractCombat {
         }
         const maxDistanceFromFarmingLocation: number = 300;
 
-        if (myDistance(character, this.targetInformation!.farmingLocation) > 2 * maxDistanceFromFarmingLocation) {
-            return undefined;
+        if (this.targetInformation!.farmingLocation) {
+            if (myDistance(character, this.targetInformation!.farmingLocation) > 2 * maxDistanceFromFarmingLocation) {
+                return undefined;
+            }
         }
 
         let candidatesAttackingTeam = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
+                && this.hasHandleableDamageReturn(entity)
                 && entity.xp
                 && entity.xp > 0
                 //only assist if target has much health or is dangerous
@@ -93,6 +99,7 @@ export class RegionCleanCombat extends AbstractCombat {
             return !entity.dead
                 && entity.visible
                 && entity.xp
+                && this.hasHandleableDamageReturn(entity)
                 && entity.xp > 0
                 && entity.target == character.name
                 && entity.type === 'monster'
@@ -103,9 +110,14 @@ export class RegionCleanCombat extends AbstractCombat {
             return candidatesAttackingMe[0];
         }
 
+        if (!this.targetInformation || !this.targetInformation.farmingLocation) {
+            return
+        }
+
         let candidates = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
+                && this.hasHandleableDamageReturn(entity)
                 && entity.xp
                 && entity.xp > 0
                 && (!entity.target
@@ -113,11 +125,11 @@ export class RegionCleanCombat extends AbstractCombat {
                 )
                 && entity.type === 'monster'
                 && myDistance(character, entity) < maxDistanceFromFarmingLocation * 2
-                && myDistance(character, this.targetInformation!.farmingLocation) < maxDistanceFromFarmingLocation
+                && myDistance(character, this.targetInformation!.farmingLocation!) < maxDistanceFromFarmingLocation
         });
         candidates = candidates.sort((a, b) => {
             // the closer to center of farming location, the more interesting
-            return myDistance(a, this.targetInformation!.farmingLocation) - myDistance(b, this.targetInformation!.farmingLocation);
+            return myDistance(a, this.targetInformation!.farmingLocation!) - myDistance(b, this.targetInformation!.farmingLocation!);
         })
 
         // // clear_drawings();
@@ -154,6 +166,15 @@ export class RegionCleanCombat extends AbstractCombat {
     //     // draw_circle(character.x, character.y, 100, 4, 0x00FFFF);
     //
     // }
+    private hasHandleableDamageReturn(entity: Entity): boolean {
+        if (!entity.dreturn) {
+            return true;
+        }
+        if (entity.dreturn && entity.dreturn < 1) {
+            return true;
+        }
+        return false;
+    }
 }
 
 // function get_nearest_monster(args) {
