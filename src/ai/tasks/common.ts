@@ -249,6 +249,9 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "arcticbee":
             farmingLocation = {map: 'winterland', x: 1108, y: -900};
             break;
+        case "iceroamer":
+            farmingLocation = {map: 'winterland', x: 635, y: -6};
+            break;
     }
     return farmingLocation;
 }
