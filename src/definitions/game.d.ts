@@ -186,6 +186,7 @@ declare global {
     var game_logs: any[];
     var G: GameInfo;
     var C: any;
+    var S: any;
     var clear_game_logs: () => void;
     var smart: ISmartActions;
     var handle_death: () => void;

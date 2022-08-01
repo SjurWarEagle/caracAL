@@ -74,6 +74,8 @@ export class RegionCleanCombat extends AbstractCombat {
             return !entity.dead
                 && entity.visible
                 && this.hasHandleableDamageReturn(entity)
+                && entity.mtype
+                && entity.mtype !== 'plantoid'
                 && entity.xp
                 && entity.xp > 0
                 //only assist if target has much health or is dangerous
@@ -98,6 +100,8 @@ export class RegionCleanCombat extends AbstractCombat {
         let candidatesAttackingMe = Object.values(parent.entities).filter((entity) => {
             return !entity.dead
                 && entity.visible
+                && entity.mtype
+                && entity.mtype !== 'plantoid'
                 && entity.xp
                 && this.hasHandleableDamageReturn(entity)
                 && entity.xp > 0
@@ -118,6 +122,8 @@ export class RegionCleanCombat extends AbstractCombat {
             return !entity.dead
                 && entity.visible
                 && this.hasHandleableDamageReturn(entity)
+                && entity.mtype
+                && entity.mtype !== 'plantoid'
                 && entity.xp
                 && entity.xp > 0
                 && (!entity.target
@@ -170,7 +176,7 @@ export class RegionCleanCombat extends AbstractCombat {
         if (!entity.dreturn) {
             return true;
         }
-        if (entity.dreturn && entity.dreturn < 1) {
+        if (entity.dreturn && entity.dreturn <= 30) {
             return true;
         }
         return false;

@@ -211,8 +211,6 @@ export async function walkToGroupLead(broadcast: BroadCastHandler) {
 
 
 export function getFarmingLocationForMonsterType(huntType: string): { map: string, x: number, y: number } | undefined {
-    // porcubine - DANGER
-    // private farmingLocation: { x: number, y: number } = {map:'desertland',:x: -1140, y: 350};
     // wild boars
     // private farmingLocation: { map: string, x: number, y: number } = {map: 'winterland', x: -160, y: -1000};
     // event
@@ -224,11 +222,24 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "bee":
             farmingLocation = {map: 'main', x: 546, y: 1059};
             break;
+        case "porcupine":
+            //danger
+            farmingLocation = {map: 'desertland', x: -842, y: 299};
+            break;
+        // case "XXX":
+        //     farmingLocation = {map: 'main', x: , y: };
+        //     break;
+        // case "scorpion":
+        //     farmingLocation = {map: 'main', x: , y: };
+        //     break;
         case "goo":
             farmingLocation = {map: 'main', x: 16, y: 723};
             break;
         case "spider":
             farmingLocation = {map: 'main', x: 817, y: -339};
+            break;
+        case "armadillo":
+            farmingLocation = {map: 'main', x: 518, y: 1849};
             break;
         case "squidtoad":
             farmingLocation = {map: 'main', x: -1140, y: 350};
@@ -249,9 +260,14 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "arcticbee":
             farmingLocation = {map: 'winterland', x: 1108, y: -900};
             break;
+        case "default":
         case "iceroamer":
             farmingLocation = {map: 'winterland', x: 635, y: -6};
             break;
+        default:
+        //event - goo brawl
+        // if(S.goobrawl && character.map!="goobrawl")
+        //     parent.socket.emit('join',{name:'goobrawl'});
     }
     return farmingLocation;
 }
@@ -260,7 +276,8 @@ export async function determineMonsterTypeMatchingLevel(huntingHandler: HuntingH
     let rc: TargetInformation = {
         mon_type: '',
         allAttackSameTarget: false,
-        farmingLocation: {map: 'winterland', x: 1108, y: -900},
+        farmingLocation: getFarmingLocationForMonsterType('default'),
+        // farmingLocation: {map: 'winterland', x: 1108, y: -900},
     };
 
     const huntType = await huntingHandler.getTypOfMonsterToHunt();
