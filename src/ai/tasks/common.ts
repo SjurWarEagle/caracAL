@@ -241,8 +241,9 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "armadillo":
             farmingLocation = {map: 'main', x: 518, y: 1849};
             break;
+        case "squid":
         case "squidtoad":
-            farmingLocation = {map: 'main', x: -1140, y: 350};
+            farmingLocation = {map: 'main', x: -1143, y: 538};
             break;
         case "croc":
             farmingLocation = {map: 'main', x: 920, y: 1650};
@@ -259,6 +260,17 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
             break;
         case "arcticbee":
             farmingLocation = {map: 'winterland', x: 1108, y: -900};
+            break;
+        // case "stoneworm":
+            // too hard
+        //     farmingLocation = {map: 'spookytown', x: 823, y: 157};
+        //     break;
+        case "tortoise":
+        case "frog":
+            farmingLocation = {map: 'main', x: -1124, y: 1118};
+            break;
+        case "crab":
+            farmingLocation = {map: 'main', x: -1213, y: -108};
             break;
         case "default":
         case "iceroamer":

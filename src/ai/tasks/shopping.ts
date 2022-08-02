@@ -64,7 +64,7 @@ export class ShoppingHandler {
         }
 
         set_message('trvl city')
-        await smart_move({x: -180, y: -110}, () => {
+        await smart_move({map:'main', x: -180, y: -110}, () => {
             // console.log("💰 I have reached the city");
 
             console.log("💰 trying to buy " + amountToBuyMP0 + " MP0 and " + amountToBuyHP0 + " HP0");
