@@ -1,10 +1,31 @@
 import {Tools} from "../../tools";
 
+interface UpgradeWish {
+    itemName: string;
+    targetLevel: number
+}
+
 export class EquipmentHandler {
     private tool = new Tools();
-    private itemsToCombine: string[] = ['hpbelt', 'hpamulet', 'ringsj', 'dexamulet', 'intamulet', 'stramulet', 'dexring', 'intring', 'strring', 'vitring']
-    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff','cclaw','sshield']
-    private itemsToUpgrade: string[] = ['wcap', 'slimestaff','wattire']
+    private itemsToCombine: UpgradeWish[] = [
+        {targetLevel: 5, itemName: 'hbow'},
+        {targetLevel: 5, itemName: 'hpbelt'},
+        {targetLevel: 5, itemName: 'hpamulet'},
+        {targetLevel: 5, itemName: 'ringsj'},
+        {targetLevel: 3, itemName: 'dexamulet'},
+        {targetLevel: 3, itemName: 'intamulet'},
+        {targetLevel: 3, itemName: 'stramulet'},
+        {targetLevel: 3, itemName: 'dexring'},
+        {targetLevel: 3, itemName: 'intring'},
+        {targetLevel: 3, itemName: 'strring'},
+        {targetLevel: 3, itemName: 'vitring'}
+    ];
+    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff', 'cclaw', 'sshield']
+    private itemsToUpgrade: UpgradeWish[] = [
+        {targetLevel: 3, itemName: 'wcap'},
+        {targetLevel: 3, itemName: 'slimestaff'},
+        {targetLevel: 3, itemName: 'wattire'},
+    ];
 
     // private itemsToUpgrade: string[] = ['hpbelt']
 
@@ -22,9 +43,9 @@ export class EquipmentHandler {
 
     public async getNumberOfStuffToUpgrade(): Promise<number> {
         let total = 0;
-        for (let itemName of this.itemsToUpgrade) {
-            for (let level = 0; level < 5; level++) {
-                const cnt = this.tool.getInventoryStockWithSpecialLevel(itemName, level);
+        for (let item of this.itemsToUpgrade) {
+            for (let level = 0; level < item.targetLevel; level++) {
+                const cnt = this.tool.getInventoryStockWithSpecialLevel(item.itemName, level);
                 total += cnt;
             }
         }
@@ -45,9 +66,9 @@ export class EquipmentHandler {
         // console.log('getNumberOfPossibleUpgradeActions');
         let numberOfActions = 0;
         //level 0-1
-        for (let level = 0; level < 3; level++) {
-            for (let itemName of this.itemsToCombine) {
-                const cnt = this.tool.getInventoryStockWithSpecialLevel(itemName, level);
+        for (let item of this.itemsToCombine) {
+            for (let level = 0; level < item.targetLevel; level++) {
+                const cnt = this.tool.getInventoryStockWithSpecialLevel(item.itemName, level);
                 // if (cnt >= 3) {
                 // console.log(character.name + ': I could upgrade ' + itemName + ' ' + Math.floor(cnt / 3) + 'x times (level ' + level + ')');
                 // }
@@ -102,12 +123,12 @@ export class EquipmentHandler {
     }
 
     async performRandomUpgrade(): Promise<void> {
-        for (let level = 0; level < 5; level++) {
-            for (let itemName of this.itemsToUpgrade) {
-                const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(itemName, level);
+        for (let item of this.itemsToUpgrade) {
+            for (let level = 0; level < item.targetLevel; level++) {
+                const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(item.itemName, level);
                 for (let idx of cnt) {
                     if (character.q.upgrade) {
-                        console.log("Already upgrading something!");
+                        // console.log("Already upgrading something!");
                         return;
                     }
                     if (can_use('massproduction') && !is_on_cooldown('massproduction')) {
@@ -120,12 +141,12 @@ export class EquipmentHandler {
     }
 
     async performRandomCompound(): Promise<void> {
-        for (let level = 0; level < 3; level++) {
-            for (let itemName of this.itemsToCombine) {
-                const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(itemName, level);
+        for (let item of this.itemsToCombine) {
+            for (let level = 0; level < item.targetLevel; level++) {
+                const cnt: number[] = await this.tool.getInventorySlotsForItemsWithSpecialLevel(item.itemName, level);
                 if (cnt.length >= 3) {
                     if (character.q.compound) {
-                        console.log("Already combining something!");
+                        // console.log("Already combining something!");
                         return;
                     }
                     await compound(cnt[0], cnt[1], cnt[2], locate_item("cscroll0"));

@@ -222,6 +222,7 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "bee":
             farmingLocation = {map: 'main', x: 546, y: 1059};
             break;
+        case "default":
         case "porcupine":
             //danger
             farmingLocation = {map: 'desertland', x: -842, y: 299};
@@ -262,7 +263,7 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
             farmingLocation = {map: 'winterland', x: 1108, y: -900};
             break;
         // case "stoneworm":
-            // too hard
+        // too hard
         //     farmingLocation = {map: 'spookytown', x: 823, y: 157};
         //     break;
         case "tortoise":
@@ -272,7 +273,6 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "crab":
             farmingLocation = {map: 'main', x: -1213, y: -108};
             break;
-        case "default":
         case "iceroamer":
             farmingLocation = {map: 'winterland', x: 635, y: -6};
             break;
@@ -440,4 +440,13 @@ export function getInventorySlotOfItem(itemName: string) {
             return i;
         }
     }
+}
+
+export function calculate_item_grade(def: any, level: number) {
+    if (!(def.upgrade || def.compound)) return 0;
+    if (level >= (def.grades || [9, 10, 11, 12])[3]) return 4;
+    if (level >= (def.grades || [9, 10, 11, 12])[2]) return 3;
+    if (level >= (def.grades || [9, 10, 11, 12])[1]) return 2;
+    if (level >= (def.grades || [9, 10, 11, 12])[0]) return 1;
+    return 0;
 }
