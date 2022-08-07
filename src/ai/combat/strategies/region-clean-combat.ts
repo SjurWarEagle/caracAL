@@ -54,6 +54,7 @@ export class RegionCleanCombat extends AbstractCombat {
                 this.targetInformation.farmingLocation = getFarmingLocationForMonsterType('default');
             }
             if (this.targetInformation!.farmingLocation && myDistance(character, this.targetInformation!.farmingLocation) > 20) {
+                set_message('👉')
                 if (!smart.moving && !is_moving(character)) {
                     if (this.targetInformation!.farmingLocation.map !== character.map) {
                         console.log('switching map because', this.targetInformation!.farmingLocation.map, '!==', character.map);
