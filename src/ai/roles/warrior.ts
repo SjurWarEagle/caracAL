@@ -2,6 +2,7 @@ import {startPartyInvite} from "../tasks/common";
 import {Fighter} from "./fighter";
 import {BroadCastHandler} from "../tasks/broadcasts";
 import {RegionCleanCombat} from "../combat/strategies/region-clean-combat";
+import {Tools} from "../../tools";
 
 export class Warrior extends Fighter {
 
@@ -24,6 +25,7 @@ export class Warrior extends Fighter {
     }
 
     async performRoleSpecificTasks(): Promise<boolean> {
+        Tools.drawRangeCircles();
         return false;
     }
 }

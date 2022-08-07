@@ -94,6 +94,8 @@ export class Merchant {
 
         setInterval(async () => {
 
+            await Tools.drawRangeCircles();
+
             if (character.rip) {
                 setTimeout(respawn, 15000);
                 return;

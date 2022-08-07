@@ -128,6 +128,7 @@ export class Wingman extends AbstractCombat {
                 && entity.target == character.name
                 && entity.type === 'monster'
                 && !entity!.mtype?.startsWith('target_')
+                && entity.mtype?.indexOf('redfairy')===-1
                 && (myDistance(character, entity) <= character.range)
         });
         if (candidatesAttackingMe && candidatesAttackingMe.length > 0) {
@@ -144,6 +145,7 @@ export class Wingman extends AbstractCombat {
                     && entity.xp > 0
                     && entity.type === 'monster'
                     && !entity!.mtype?.startsWith('target_')
+                    && entity.mtype?.indexOf('redfairy')===-1
                     && (myDistance(character, entity) <= character.range)
             });
             if (candidatesEasy && candidatesEasy.length > 0) {
@@ -157,6 +159,7 @@ export class Wingman extends AbstractCombat {
                     && entity.xp > 0
                     && entity.type === 'monster'
                     && !entity!.mtype?.startsWith('target_')
+                    && entity.mtype?.indexOf('redfairy')===-1
                     && (myDistance(character, entity) <= character.range)
             });
             if (candidates && candidates.length > 0) {

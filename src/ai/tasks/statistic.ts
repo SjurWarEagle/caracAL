@@ -7,8 +7,8 @@ import {CharAvgCollector} from "./char-avg-collector";
 import {TrackTrixCollector} from "./track-trix-collector";
 
 export class StatisticDistributor {
-    // private apiHost = 'http://al-dashboard.tkunkel.de';
-    private apiHost = 'http://localhost:3700';
+    private apiHost = 'http://al-dashboard.tkunkel.de';
+    // private apiHost = 'http://localhost:3700';
 
     // noinspection JSUnusedLocalSymbols
     constructor(private charAvgCollector: CharAvgCollector, private trackTrixCollector: TrackTrixCollector) {

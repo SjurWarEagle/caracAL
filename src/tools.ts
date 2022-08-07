@@ -1,5 +1,6 @@
 import {ItemInfo} from "./definitions/game";
 import {sortBy} from "lodash";
+import config from "./ai/config";
 
 export class Tools {
 
@@ -254,6 +255,44 @@ export class Tools {
         });
 
         return rc;
+    }
+
+    static async drawRangeCircles(): Promise<void> {
+        if (parent.caracAL) {
+            return;
+        }
+
+        clear_drawings();
+        config.myHelpers.forEach((charName) => {
+            const char = get_player(charName);
+            if (!char || !char.range) {
+                return;
+            }
+            const x = char.real_x || char.x || 0;
+            const y = char.real_y || char.y || 0;
+            const color = this.getCharColor(charName);
+            const length = char.range;
+
+            draw_circle(x, y, length, 2, color)
+            // draw_line(x - length, y, x + length, y, 1, color)
+            // draw_line(x, y - length, x, y + length, 1, color)
+        })
+    }
+
+    private static getCharColor(charName: string): number {
+        switch (charName) {
+            case 'Sjur':
+                return 0xFF0000;
+            case 'Schnapper':
+                return 0x00FF00;
+            case 'Elvira':
+                return 0xFF00FF;
+            case 'Kosh':
+                return 0x0000FF;
+            case 'WarEagle':
+                return 0xFFFF00;
+        }
+        return 0xFFFFFF;
     }
 }
 

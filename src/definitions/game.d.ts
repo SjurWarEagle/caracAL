@@ -99,6 +99,7 @@ export interface Entity {
     going_x?: number;
     going_y?: number;
     range?: number;
+    level?: number;
     hp: number;
     cc: number;
     map: string;
@@ -237,6 +238,7 @@ declare global {
     function reduce_cooldown(skill: SkillName, time: number): void;
 
     function use_skill(skill: SkillName, target?: Entity): void;
+    function use_skill(skill: SkillName, targets: Entity[]): void;
 
     function heal(entity: Entity): void;
 
@@ -268,6 +270,7 @@ declare global {
     function send_party_invite(to: string): void;
 
     function is_in_range(entity: Entity): boolean;
+    function is_in_range(entity: Entity,skill:string): boolean;
 
     function get_targeted_monster(): any;
 

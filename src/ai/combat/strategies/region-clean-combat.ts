@@ -1,7 +1,7 @@
 import {AbstractCombat} from "../abstract-combat";
 import {HuntingHandler} from "../../tasks/hunting";
 import {BroadCastHandler} from "../../tasks/broadcasts";
-import {move_half_way, myDistance} from "../../tasks/common";
+import {getFarmingLocationForMonsterType, move_half_way, myDistance} from "../../tasks/common";
 import {Entity} from "../../../definitions/game";
 import config, {partyMerchant} from "../../config";
 
@@ -44,12 +44,22 @@ export class RegionCleanCombat extends AbstractCombat {
             }
         } else {
             //no target in range, then move to farming position
+            if (!this.targetInformation!.farmingLocation) {
+                if (!this.targetInformation) {
+                    this.targetInformation = {
+                        mon_type: 'goo',
+                        allAttackSameTarget: false
+                    }
+                }
+                this.targetInformation.farmingLocation = getFarmingLocationForMonsterType('default');
+            }
             if (this.targetInformation!.farmingLocation && myDistance(character, this.targetInformation!.farmingLocation) > 20) {
                 if (!smart.moving && !is_moving(character)) {
                     if (this.targetInformation!.farmingLocation.map !== character.map) {
                         console.log('switching map because', this.targetInformation!.farmingLocation.map, '!==', character.map);
                         await smart_move(this.targetInformation!.farmingLocation.map);
                     } else {
+                        console.log('moving to farming location', this.targetInformation!.farmingLocation);
                         await smart_move(this.targetInformation!.farmingLocation);
                     }
                 }

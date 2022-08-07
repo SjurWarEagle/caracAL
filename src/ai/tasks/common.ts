@@ -222,10 +222,9 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "bee":
             farmingLocation = {map: 'main', x: 546, y: 1059};
             break;
-        case "default":
         case "porcupine":
             //danger
-            farmingLocation = {map: 'desertland', x: -842, y: 299};
+            farmingLocation = {map: 'desertland', x: -842, y: 130};
             break;
         // case "XXX":
         //     farmingLocation = {map: 'main', x: , y: };
@@ -273,13 +272,10 @@ export function getFarmingLocationForMonsterType(huntType: string): { map: strin
         case "crab":
             farmingLocation = {map: 'main', x: -1213, y: -108};
             break;
+        case "default":
         case "iceroamer":
             farmingLocation = {map: 'winterland', x: 635, y: -6};
             break;
-        default:
-        //event - goo brawl
-        // if(S.goobrawl && character.map!="goobrawl")
-        //     parent.socket.emit('join',{name:'goobrawl'});
     }
     return farmingLocation;
 }
