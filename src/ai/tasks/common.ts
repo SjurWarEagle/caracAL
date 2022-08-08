@@ -3,6 +3,7 @@ import {Entity} from "../../definitions/game";
 import {BroadCastHandler} from "./broadcasts";
 import {TargetInformation} from "../combat/target-information";
 import {HuntingHandler} from "./hunting";
+import {Tools} from "../../tools";
 
 export const ACTIVE_HUNT_INFO = 'ACTIVE_HUNT_INFO';
 export const ACTIVE_HUNT_MISSING = 'ACTIVE_HUNT_MISSING';
@@ -299,16 +300,23 @@ export async function determineMonsterTypeMatchingLevel(huntingHandler: HuntingH
 }
 
 export function usePotionIfNeeded(): void {
+    const tool = new Tools();
     let oneSecond = 1_000;
     let msSinceLastRegen = Date.now() - lastRegeneration;
     let isMoreThan_1Sec = msSinceLastRegen > oneSecond;
     let isMoreThan_2Sec = msSinceLastRegen > 2 * oneSecond;
 
-    if (character.hp / character.max_hp <= .3 && isMoreThan_1Sec) {
+    if (character.hp / character.max_hp <= .3 && isMoreThan_1Sec && tool.getInventoryStock("hpot1") >= 1) {
         consume(locate_item("hpot1"));
         lastRegeneration = Date.now();
-    } else if (character.mp / character.max_mp <= .3 && isMoreThan_1Sec) {
+    } else if (character.mp / character.max_mp <= .3 && isMoreThan_1Sec && tool.getInventoryStock("mpot1") >= 1) {
         consume(locate_item("mpot1"));
+        lastRegeneration = Date.now();
+    } else if (character.hp / character.max_hp <= .3 && isMoreThan_1Sec && tool.getInventoryStock("hpot0") >= 1) {
+        consume(locate_item("hpot0"));
+        lastRegeneration = Date.now();
+    } else if (character.mp / character.max_mp <= .3 && isMoreThan_1Sec && tool.getInventoryStock("mpot0") >= 1) {
+        consume(locate_item("mpot0"));
         lastRegeneration = Date.now();
     } else if (character.hp / character.max_hp <= .6 && isMoreThan_1Sec) {
         use("use_hp");

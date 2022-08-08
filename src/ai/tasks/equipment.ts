@@ -20,7 +20,7 @@ export class EquipmentHandler {
         {targetLevel: 3, itemName: 'strring'},
         {targetLevel: 3, itemName: 'vitring'}
     ];
-    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff', 'cclaw', 'sshield','wbreeches','wattire','wcap']
+    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff', 'cclaw', 'sshield','wbreeches','wattire','wcap','whiteegg']
     private itemsToUpgrade: UpgradeWish[] = [
         {targetLevel: 0, itemName: 'slimestaff'},
     ];
