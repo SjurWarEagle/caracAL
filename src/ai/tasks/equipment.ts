@@ -23,7 +23,7 @@ export class EquipmentHandler {
     private itemsToSell: string[] = ['stinger', 'slimestaff',
         'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1',
         'mushroomstaff', 'cclaw', 'sshield',
-        'wshoes', 'wbreeches', 'wattire', 'wcap',
+        'wshoes', 'wbreeches', 'wattire', 'wcap','wgloves',
         'whiteegg', 'hpamulet', 'ringsj'
     ]
     private itemsToUpgrade: UpgradeWish[] = [
