@@ -13,8 +13,9 @@
     "start": "node main.js",
     "start:inspect": "node --inspect main.js",
     "upload": "ts-node src/upload/upload.ts",
+    "ci": "npm ci",
     "build:upload": "run-s build:all:dev upload ",
-    "start:withbuild": "run-s build:all:dev rm:localstorage start",
+    "start:withbuild": "run-s ci build:all:dev rm:localstorage start",
     "start-demon": "nodemon --exec 'npm run start:withbuild' --watch CODE/**/js --watch src -e js,ts",
     "compile:tsc":"tsc --outFile 1.js src/ai/roles/merchant.ts"
   },
