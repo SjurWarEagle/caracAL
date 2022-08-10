@@ -10,8 +10,6 @@ export class EquipmentHandler {
     private itemsToCombine: UpgradeWish[] = [
         {targetLevel: 5, itemName: 'hbow'},
         {targetLevel: 5, itemName: 'hpbelt'},
-        // {targetLevel: 5, itemName: 'hpamulet'},
-        // {targetLevel: 5, itemName: 'ringsj'},
         {targetLevel: 3, itemName: 'dexamulet'},
         {targetLevel: 3, itemName: 'intamulet'},
         {targetLevel: 3, itemName: 'stramulet'},
