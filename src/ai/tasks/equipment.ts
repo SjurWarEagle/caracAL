@@ -10,8 +10,8 @@ export class EquipmentHandler {
     private itemsToCombine: UpgradeWish[] = [
         {targetLevel: 5, itemName: 'hbow'},
         {targetLevel: 5, itemName: 'hpbelt'},
-        {targetLevel: 5, itemName: 'hpamulet'},
-        {targetLevel: 5, itemName: 'ringsj'},
+        // {targetLevel: 5, itemName: 'hpamulet'},
+        // {targetLevel: 5, itemName: 'ringsj'},
         {targetLevel: 3, itemName: 'dexamulet'},
         {targetLevel: 3, itemName: 'intamulet'},
         {targetLevel: 3, itemName: 'stramulet'},
@@ -20,9 +20,14 @@ export class EquipmentHandler {
         {targetLevel: 3, itemName: 'strring'},
         {targetLevel: 3, itemName: 'vitring'}
     ];
-    private itemsToSell: string[] = ['stinger', 'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1', 'wshoes', 'mushroomstaff', 'cclaw', 'sshield','wbreeches','wattire','wcap','whiteegg']
+    private itemsToSell: string[] = ['stinger', 'slimestaff',
+        'coat1', 'pants1', 'shoes1', 'helmet1', 'gloves1',
+        'mushroomstaff', 'cclaw', 'sshield',
+        'wshoes', 'wbreeches', 'wattire', 'wcap',
+        'whiteegg', 'hpamulet', 'ringsj'
+    ]
     private itemsToUpgrade: UpgradeWish[] = [
-        {targetLevel: 0, itemName: 'slimestaff'},
+        // {targetLevel: 0, itemName: 'slimestaff'},
     ];
 
     // private itemsToUpgrade: string[] = ['hpbelt']

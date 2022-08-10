@@ -47,13 +47,13 @@ export class RegionCleanCombat extends AbstractCombat {
             if (!this.targetInformation!.farmingLocation) {
                 if (!this.targetInformation) {
                     this.targetInformation = {
-                        mon_type: 'goo',
+                        mon_type: 'bee',
                         allAttackSameTarget: false
                     }
                 }
                 this.targetInformation.farmingLocation = getFarmingLocationForMonsterType('default');
             }
-            if (this.targetInformation!.farmingLocation && myDistance(character, this.targetInformation!.farmingLocation) > 20) {
+            if (this.targetInformation?.farmingLocation && myDistance(character, this.targetInformation?.farmingLocation) > 20) {
                 set_message('👉')
                 if (!smart.moving && !is_moving(character)) {
                     if (this.targetInformation!.farmingLocation.map !== character.map) {
